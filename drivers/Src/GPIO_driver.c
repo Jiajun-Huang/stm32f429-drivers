@@ -44,12 +44,13 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
         uint8_t temp2 = pinNumber % 4; // which pin in the register
         uint8_t portCode = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
         SYSCFG_PCLK_EN(); // enable the clock for SYSCFG
-        SYSCFG->EXTICR[temp1] = portCode << (temp2 * 4); // configure the port selection in SYSCFG_EXTICR
+        SYSCFG->EXTICR[temp1] =
+            portCode << (temp2 *
+                         4); // configure the port selection in SYSCFG_EXTICR
 
         // enable the exti interrupt delivery using IMR (interrupt mask
         // register)
         EXTI->IMR |= (1 << pinNumber);
-        
     }
     // 2. configure the speed
     temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << (2 * pinNumber));
@@ -171,30 +172,14 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber) {
     pGPIOx->ODR ^= (1 << PinNumber);
 } // toggle the output pin
 
-void GPIO_IRQInterruptConfig(uint8_t IRQNumber,
-                             uint8_t EnorDi) {
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi) {
+    uint8_t regSel = IRQNumber / 32; // determine which register to use
+    uint8_t bitPos = IRQNumber % 32; // determine which bit to use
+
     if (EnorDi == ENABLE) {
-        if (IRQNumber <= 31) {
-            // program ISER0 register
-            *NVIC_ISER0 |= (1 << IRQNumber);
-        } else if (IRQNumber > 31 && IRQNumber < 64) {
-            // program ISER1 register
-            *NVIC_ISER1 |= (1 << (IRQNumber % 32));
-        } else if (IRQNumber >= 64 && IRQNumber < 96) {
-            // program ISER2 register
-            *NVIC_ISER2 |= (1 << (IRQNumber % 64));
-        }
+        *(NVIC_ISER[regSel]) |= (1U << bitPos);
     } else {
-        if (IRQNumber <= 31) {
-            // program ICER0 register
-            *NVIC_ICER0 |= (1 << IRQNumber);
-        } else if (IRQNumber > 31 && IRQNumber < 64) {
-            // program ICER1 register
-            *NVIC_ICER1 |= (1 << (IRQNumber % 32));
-        } else if (IRQNumber >= 64 && IRQNumber < 96) {
-            // program ICER2 register
-            *NVIC_ICER2 |= (1 << (IRQNumber % 64));
-        }
+        *(NVIC_ICER[regSel]) |= (1U << bitPos);
     }
 } // IRQNumber is the IRQ number of the interrupt
 void GPIO_IRQHandling(uint8_t PinNumber) {
@@ -207,9 +192,20 @@ void GPIO_IRQHandling(uint8_t PinNumber) {
 
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority) {
     // find out the IPR register
-    uint8_t iprx = IRQNumber / 4; // find out the IPR register
+    uint8_t iprx = IRQNumber / 4;         // find out the IPR register
     uint8_t iprx_section = IRQNumber % 4; // find out the section of the IPR
-                                           // register
+                                          // register
 
-    *(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << (8 * iprx_section + 4 ));
+    *(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << (8 * iprx_section + 4));
+}
+
+void GPIO_setInteeruptFunction(uint8_t PinNumber, void (*function)(void)) {
+
+    if (PinNumber >= 0 && PinNumber <= 4) {
+        *((void (**)(void))EXTI0_HANDLER_ADDR + PinNumber) = function;
+    } else if (PinNumber >= 5 && PinNumber <= 9) {
+        *((void (**)(void))EXTI9_5_HANDLER_ADDR) = function;
+    } else if (PinNumber >= 10 && PinNumber <= 15) {
+        *((void (**)(void))EXTI15_10_HANDLER_ADDR) = function;
+    }
 }

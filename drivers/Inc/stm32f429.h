@@ -1,21 +1,19 @@
 /*
- * stm32f429xx.h
+ * stm32f429.h
  *
  *  Created on: Jul 2, 2023
- *      Author: jiajun
+ *      Author: Jiajun
  */
+
+#ifndef INC_STM32F429_H_
+#define INC_STM32F429_H_
+#include "type_def.h"
 #include <stdint.h>
 
-#ifndef INC_STM32F429XX_H_
-#define INC_STM32F429XX_H_
-
-#include "type_def.h"
-
-// ISERx register addresses
-#define NVIC_ISER0 (__vo uint32_t *)0xE000E100
-#define NVIC_ISER1 (__vo uint32_t *)0xE000E104
-#define NVIC_ISER2 (__vo uint32_t *)0xE000E108
-#define NVIC_ISER3 (__vo uint32_t *)0xE000E10C
+// ISER (Interrupt Set enable register) register addresses
+#define NVIC_ISER ((__vo uint32_t(*)[8])0xE000E100)
+// ICER (Interrupt Clear enable register) register addresses
+#define NVIC_ICER ((__vo uint32_t(*)[8])0xE000E180)
 
 // ICERx register addresses
 #define NVIC_ICER0 (__vo uint32_t *)0xE000E180
@@ -26,7 +24,11 @@
 // Priority register address calculation
 #define NVIC_PR_BASE_ADDR (__vo uint32_t *)0xE000E400
 
-
+/*
+ * ARM Cortex Mx Processor number of priority bits implemented in Priority
+ * Register
+ */
+#define NO_PR_BITS_IMPLEMENTED 4、
 
 // Base addresses of Flash and SRAM memories
 #define FLASH_BASEADDR 0x08000000U
@@ -78,14 +80,12 @@
 #define SYSCFG_BASEADDR (APB2PERIPH_BASEADDR + 0x3800)
 #define RCC_BASEADDR (AHB1PERIPH_BASEADDR + 0x3800)
 
-
 #define EXTI ((EXTI_RegDef_t *)EXTI_BASEADDR)
 #define SYSCFG ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
 
 #define RCC ((RCC_RegDef_t *)RCC_BASEADDR)
 
-// Peripheral register definition structures
-
+//** object definitions start **//
 #define GPIOA ((GPIO_RegDef_t *)GPIOA_BASEADDR)
 #define GPIOB ((GPIO_RegDef_t *)GPIOB_BASEADDR)
 #define GPIOC ((GPIO_RegDef_t *)GPIOC_BASEADDR)
@@ -95,6 +95,27 @@
 #define GPIOG ((GPIO_RegDef_t *)GPIOG_BASEADDR)
 #define GPIOH ((GPIO_RegDef_t *)GPIOH_BASEADDR)
 #define GPIOI ((GPIO_RegDef_t *)GPIOI_BASEADDR)
+
+#define RCC ((RCC_RegDef_t *)RCC_BASEADDR)
+#define EXTI ((EXTI_RegDef_t *)EXTI_BASEADDR)
+#define SYSCFG ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
+
+#define SPI1 ((SPI_RegDef_t *)SPI1_BASEADDR)
+#define SPI2 ((SPI_RegDef_t *)SPI2_BASEADDR)
+#define SPI3 ((SPI_RegDef_t *)SPI3_BASEADDR)
+
+// #define I2C1 ((I2C_RegDef_t *)I2C1_BASEADDR)
+// #define I2C2 ((I2C_RegDef_t *)I2C2_BASEADDR)
+// #define I2C3 ((I2C_RegDef_t *)I2C3_BASEADDR)
+
+// #define USART1 ((USART_RegDef_t *)USART1_BASEADDR)
+// #define USART2 ((USART_RegDef_t *)USART2_BASEADDR)
+// #define USART3 ((USART_RegDef_t *)USART3_BASEADDR)
+// #define UART4 ((USART_RegDef_t *)UART4_BASEADDR)
+// #define UART5 ((USART_RegDef_t *)UART5_BASEADDR)
+// #define USART6 ((USART_RegDef_t *)USART6_BASEADDR)
+
+//** object definitions end **//
 
 // Clock enable/disable macros for GPIOx peripherals
 #define GPIOA_PCLK_EN() (RCC->AHB1ENR |= (1 << 0))
@@ -172,6 +193,10 @@
         RCC->AHB1STR &= 0xFFFFFF00                                             \
     } while (0)
 
+//** GPIO object end **//
+
+//** SPI object start **//
+
 // Clock enable/disable macros for I2Cx peripherals
 #define I2C1_PCLK_EN() (RCC->APB1ENR |= (1 << 21))
 #define I2C2_PCLK_EN() (RCC->APB1ENR |= (1 << 22))
@@ -211,7 +236,7 @@
 #define SYSCFG_PCLK_EN() (RCC->APB2ENR |= (1 << 14))
 #define SYSCFG_PCLK_DI() (RCC->APB2ENR &= ~(1 << 14))
 
-// IRQ (Intr) numbers of STM32F407x MCU
+// IRQ (Intr) numbers for EXTI obtain from vector table of position number
 #define IRQ_NO_EXTI0 6
 #define IRQ_NO_EXTI1 7
 #define IRQ_NO_EXTI2 8
@@ -238,7 +263,6 @@
 #define NVIC_IRQ_PRI14 14
 #define NVIC_IRQ_PRI15 15
 
-
 // some generic macros
 #define ENABLE 1
 #define DISABLE 0
@@ -248,5 +272,6 @@
 #define GPIO_PIN_RESET RESET
 
 #include "GPIO_driver.h"
+#include "SPI_driver.h"
 
-#endif /* INC_STM32F407XX_H_ */
+#endif /* INC_STM32F429_H_ */

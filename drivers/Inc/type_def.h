@@ -86,17 +86,6 @@ typedef struct {
 
 //** SPI **//
 
-typedef struct {
-    __vo SPI_CR1_bits_t CR1;         // SPI control register 1
-    __vo SPI_CR2_bits_t CR2;         // SPI control register 2
-    __vo SPI_SR_bits_t SR;           // SPI status register
-    __vo SPI_DR_bits_t DR;           // SPI data register
-    __vo SPI_CRCPR_bits_t CRCPR;     // SPI CRC polynomial register
-    __vo SPI_RXCRCR_bits_t RXCRCR;   // SPI RX CRC register
-    __vo SPI_TXCRCR_bits_t TXCRCR;   // SPI TX CRC register
-    __vo SPI_I2SCFGR_bits_t I2SCFGR; // SPI_I2S configuration register
-    __vo SPI_I2SPR_bits_t I2SPR;     // SPI_I2S prescaler register
-} SPI_RegDef_t;
 
 typedef struct {
     __vo uint32_t CPHA : 1;     // Clock phase
@@ -188,5 +177,21 @@ typedef struct {
     __vo uint32_t MCKOE : 1;  // Master clock output enable
     __vo uint32_t RESERVED1 : 22;
 } SPI_I2SPR_bits_t;
+
+typedef struct {
+    __vo SPI_CR1_bits_t CR1;         // SPI control register 1
+    __vo SPI_CR2_bits_t CR2;         // SPI control register 2
+    __vo SPI_SR_bits_t SR;           // SPI status register
+    __vo SPI_DR_bits_t DR;           // SPI data register
+    __vo SPI_CRCPR_bits_t CRCPR;     // SPI CRC polynomial register
+    __vo SPI_RXCRCR_bits_t RXCRCR;   // SPI RX CRC register
+    __vo SPI_TXCRCR_bits_t TXCRCR;   // SPI TX CRC register
+    __vo SPI_I2SCFGR_bits_t I2SCFGR; // SPI_I2S configuration register
+    __vo SPI_I2SPR_bits_t I2SPR;     // SPI_I2S prescaler register
+} SPI_RegDef_t; 
+
+//** END OF SPI **//
+
+
 
 #endif /* TYPE_DEF_H_ */

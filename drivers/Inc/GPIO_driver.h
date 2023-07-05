@@ -5,30 +5,30 @@
  *      Author: jiajun
  */
 
-#include "stm32f429xx.h"
+
+#ifndef INC_GPIO_DRIVER_H_
+#define INC_GPIO_DRIVER_H_
+
+#include "stm32f429.h"
 #include <stdint.h>
-
-#ifndef GPIO_DRIVER_H_
-#define GPIO_DRIVER_H_
-
 //@GPIO_PIN_NUMBERS
 // GPIO pin numbers
-#define GPIO_PIN_NO_0 0
-#define GPIO_PIN_NO_1 1
-#define GPIO_PIN_NO_2 2
-#define GPIO_PIN_NO_3 3
-#define GPIO_PIN_NO_4 4
-#define GPIO_PIN_NO_5 5
-#define GPIO_PIN_NO_6 6
-#define GPIO_PIN_NO_7 7
-#define GPIO_PIN_NO_8 8
-#define GPIO_PIN_NO_9 9
-#define GPIO_PIN_NO_10 10
-#define GPIO_PIN_NO_11 11
-#define GPIO_PIN_NO_12 12
-#define GPIO_PIN_NO_13 13
-#define GPIO_PIN_NO_14 14
-#define GPIO_PIN_NO_15 15
+#define GPIO_PIN_0 0
+#define GPIO_PIN_1 1
+#define GPIO_PIN_2 2
+#define GPIO_PIN_3 3
+#define GPIO_PIN_4 4
+#define GPIO_PIN_5 5
+#define GPIO_PIN_6 6
+#define GPIO_PIN_7 7
+#define GPIO_PIN_8 8
+#define GPIO_PIN_9 9
+#define GPIO_PIN_10 10
+#define GPIO_PIN_11 11
+#define GPIO_PIN_12 12
+#define GPIO_PIN_13 13
+#define GPIO_PIN_14 14
+#define GPIO_PIN_15 15
 
 // @GPIO_PIN_MODES
 #define GPIO_MODE_IN 0     // input mode
@@ -56,6 +56,15 @@
 #define GPIO_NO_PUPD 0 // no pull-up or pull-down
 #define GPIO_PIN_PU 1  // pull-up
 #define GPIO_PIN_PD 2  // pull-down
+
+// GPIO interrupt vector table function address
+#define EXTI0_HANDLER_ADDR 0x00000058
+#define EXTI1_HANDLER_ADDR 0x0000005C
+#define EXTI2_HANDLER_ADDR 0x00000060
+#define EXTI3_HANDLER_ADDR 0x00000064
+#define EXTI4_HANDLER_ADDR 0x00000068
+#define EXTI9_5_HANDLER_ADDR 0x0000009C
+#define EXTI15_10_HANDLER_ADDR 0x000000E0
 
 typedef struct {
     uint8_t GPIO_PinNumber;      // possible values from @GPIO_PIN_NUMBERS
@@ -117,4 +126,5 @@ void GPIO_IRQHandling(uint8_t PinNumber); // IRQ handling from the pin number
 
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 
-#endif /* GPIO_DRIVER_H_ */
+void GPIO_setInteeruptFunction(uint8_t PinNumber, void (*function)(void));
+#endif /* INC_GPIO_DRIVER_H_ */
