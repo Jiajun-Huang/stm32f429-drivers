@@ -17,59 +17,13 @@
  */
 
 #include <stdint.h>
-#include "stm32f429xx.h"
-// #include "GPIO_driver.h"
+
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
 int main(void)
 {
-    GPIO_PinConfig_t gpioPinConfig = {
-        .GPIO_PinNumber = GPIO_PIN_NO_13,
-        .GPIO_PinMode = GPIO_MODE_OUT,
-        .GPIO_PinSpeed = GPIO_SPEED_FAST,
-        .GPIO_PinOPType = GPIO_OP_TYPE_PP,
-        .GPIO_PinPuPdControl = GPIO_PIN_PD,
-        .GPIO_PinAltFunMode = 0
-    };
-    
-    GPIO_Handle_t gpioLed = {
-        .pGPIOx = GPIOG,
-        .GPIO_PinConfig = gpioPinConfig
-    };
-    
-    GPIO_PeriClockControl(GPIOG, ENABLE);
-    GPIO_Init(&gpioLed); 
-    GPIO_WriteToOutputPin(GPIOG, GPIO_PIN_NO_13, RESET);
-
-    gpioPinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-    gpioPinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
-
-    gpioLed = (GPIO_Handle_t) {
-        .pGPIOx = GPIOB,
-        .GPIO_PinConfig = gpioPinConfig
-    };
-
-    GPIO_Init(&gpioLed);
-    GPIO_IRQPriorityConfig(IRQ_NO_EXTI0, NVIC_IRQ_PRI15);
-    GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, ENABLE);
-
-
-    
-    // while (1)
-    // {
-    //     GPIO_ToggleOutputPin(GPIOG, GPIO_PIN_NO_13);
-    //     for (int i = 0; i < 500000; i++);
-    // }
-
+    /* Loop forever */
 	for(;;);
-
-
-}
-
-void EXTI0_IRQHandler(void)
-{
-    GPIO_IRQHandling(GPIO_PIN_NO_0);
-    GPIO_ToggleOutputPin(GPIOG, GPIO_PIN_NO_13);
 }

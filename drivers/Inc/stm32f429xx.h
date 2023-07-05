@@ -9,7 +9,7 @@
 #ifndef INC_STM32F429XX_H_
 #define INC_STM32F429XX_H_
 
-#define __vo volatile
+#include "type_def.h"
 
 // ISERx register addresses
 #define NVIC_ISER0 (__vo uint32_t *)0xE000E100
@@ -78,83 +78,13 @@
 #define SYSCFG_BASEADDR (APB2PERIPH_BASEADDR + 0x3800)
 #define RCC_BASEADDR (AHB1PERIPH_BASEADDR + 0x3800)
 
-typedef struct {
-    __vo uint32_t IMR;   // Interrupt mask register
-    __vo uint32_t EMR;   // Event mask register
-    __vo uint32_t RTSR;  // Rising trigger selection register
-    __vo uint32_t FTSR;  // Falling trigger selection register
-    __vo uint32_t SWIER; // Software interrupt event register
-    __vo uint32_t PR;    // Pending register
-} EXTI_RegDef_t;
 
 #define EXTI ((EXTI_RegDef_t *)EXTI_BASEADDR)
-
-typedef struct {
-    __vo uint32_t MEMRMP; // SYSCFG memory remap register
-    __vo uint32_t PMC;    // SYSCFG peripheral mode configuration register
-    __vo uint32_t
-        EXTICR[4];         // SYSCFG external interrupt configuration register 1
-    uint32_t RESERVED1[2]; // Reserved, 0x14-0x18
-    __vo uint32_t CMPCR;   // Compensation cell control register
-    uint32_t RESERVED2[2]; // Reserved, 0x20-0x24
-    __vo uint32_t CFGR;    // SYSCFG configuration register
-} SYSCFG_RegDef_t;
-
 #define SYSCFG ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
-
-typedef struct {
-    __vo uint32_t CR;         // RCC clock control register
-    __vo uint32_t PLLCFGR;    // RCC PLL configuration register
-    __vo uint32_t CFGR;       // RCC clock configuration register
-    __vo uint32_t CIR;        // RCC clock interrupt register
-    __vo uint32_t AHB1RSTR;   // RCC AHB1 peripheral reset register
-    __vo uint32_t AHB2RSTR;   // RCC AHB2 peripheral reset register
-    __vo uint32_t AHB3RSTR;   // RCC AHB3 peripheral reset register
-    uint32_t RESERVED0;       // Reserved, 0x1C
-    __vo uint32_t APB1RSTR;   // RCC APB1 peripheral reset register
-    __vo uint32_t APB2RSTR;   // RCC APB2 peripheral reset register
-    uint32_t RESERVED1[2];    // Reserved, 0x28-0x2C
-    __vo uint32_t AHB1ENR;    // RCC AHB1 peripheral clock enable register
-    __vo uint32_t AHB2ENR;    // RCC AHB2 peripheral clock enable register
-    __vo uint32_t AHB3ENR;    // RCC AHB3 peripheral clock enable register
-    uint32_t RESERVED2;       // Reserved, 0x3C
-    __vo uint32_t APB1ENR;    // RCC APB1 peripheral clock enable register
-    __vo uint32_t APB2ENR;    // RCC APB2 peripheral clock enable register
-    uint32_t RESERVED3[2];    // Reserved, 0x48-0x4C
-    __vo uint32_t AHB1LPENR;  // RCC AHB1 peripheral clock enable in low
-                              // power mode register
-    __vo uint32_t AHB2LPENR;  // RCC AHB2 peripheral clock enable in low
-                              // power mode register
-    __vo uint32_t AHB3LPENR;  // RCC AHB3 peripheral clock enable in low
-                              // power mode register
-    uint32_t RESERVED4;       // Reserved, 0x5C
-    __vo uint32_t APB1LPENR;  // RCC APB1 peripheral clock enable in low
-                              // power mode register
-    __vo uint32_t APB2LPENR;  // RCC APB2 peripheral clock enable in low
-                              // power mode register
-    uint32_t RESERVED5[2];    // Reserved, 0x68-0x6C
-    __vo uint32_t BDCR;       // RCC Backup domain control register
-    __vo uint32_t CSR;        // RCC clock control & status register
-    uint32_t RESERVED6[2];    // Reserved, 0x78-0x7C
-    __vo uint32_t SSCGR;      // RCC spread spectrum clock generation register
-    __vo uint32_t PLLI2SCFGR; // RCC PLLI2S configuration register
-} RCC_RegDef_t;
 
 #define RCC ((RCC_RegDef_t *)RCC_BASEADDR)
 
 // Peripheral register definition structures
-typedef struct {
-    __vo uint32_t MODER;   // GPIO port mode register
-    __vo uint32_t OTYPER;  // GPIO port output type register
-    __vo uint32_t OSPEEDR; // GPIO port output speed register
-    __vo uint32_t PUPDR;   // GPIO port pull-up/pull-down register
-    __vo uint32_t IDR;     // GPIO port input data register
-    __vo uint32_t ODR;     // GPIO port output data register
-    __vo uint32_t BSRR;    // GPIO port bit set/reset register
-    __vo uint32_t LCKR;    // GPIO port configuration lock register
-    __vo uint32_t AFR[2];  // GPIO alternate function low register
-                           // GPIO alternate function high register
-} GPIO_RegDef_t;
 
 #define GPIOA ((GPIO_RegDef_t *)GPIOA_BASEADDR)
 #define GPIOB ((GPIO_RegDef_t *)GPIOB_BASEADDR)
