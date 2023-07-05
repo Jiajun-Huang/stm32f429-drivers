@@ -126,5 +126,6 @@ void GPIO_IRQHandling(uint8_t PinNumber); // IRQ handling from the pin number
 
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 
-void GPIO_setInteeruptFunction(uint8_t PinNumber, void (*function)(void));
+void GPIO_RegisterIRQHandler(uint8_t PinNumber, uint32_t IRQPriority,
+                             void (*function)(void));
 #endif /* INC_GPIO_DRIVER_H_ */

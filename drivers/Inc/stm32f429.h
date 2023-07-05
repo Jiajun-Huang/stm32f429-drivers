@@ -10,24 +10,18 @@
 #include "type_def.h"
 #include <stdint.h>
 
+//** CORE PERIPHERAL BASE ADDRESSES **//
 // ISER (Interrupt Set enable register) register addresses
 #define NVIC_ISER ((__vo uint32_t(*)[8])0xE000E100)
 // ICER (Interrupt Clear enable register) register addresses
 #define NVIC_ICER ((__vo uint32_t(*)[8])0xE000E180)
 
 // ICERx register addresses
-#define NVIC_ICER0 (__vo uint32_t *)0xE000E180
-#define NVIC_ICER1 (__vo uint32_t *)0xE000E184
-#define NVIC_ICER2 (__vo uint32_t *)0xE000E188
-#define NVIC_ICER3 (__vo uint32_t *)0xE000E18C
+#define NVIC_ICER0 ((__vo uint32_t(*)[8])0xE000E180)
 
 // Priority register address calculation
-#define NVIC_PR_BASE_ADDR (__vo uint32_t *)0xE000E400
+#define NVIC_IPR ((__vo uint32_t(*)[60])0xE000E400)
 
-/*
- * ARM Cortex Mx Processor number of priority bits implemented in Priority
- * Register
- */
 #define NO_PR_BITS_IMPLEMENTED 4、
 
 // Base addresses of Flash and SRAM memories

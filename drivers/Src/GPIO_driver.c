@@ -196,11 +196,15 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority) {
     uint8_t iprx_section = IRQNumber % 4; // find out the section of the IPR
                                           // register
 
-    *(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << (8 * iprx_section + 4));
+    *(NVIC_IPR[iprx]) |= (IRQPriority << (8 * iprx_section + 4));
 }
 
-void GPIO_setInteeruptFunction(uint8_t PinNumber, void (*function)(void)) {
+void GPIO_RegisterIRQHandler(uint8_t PinNumber, uint32_t IRQPriority,
+                             void (*function)(void)) {
 
+    GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, ENABLE);
+    GPIO_IRQPriorityConfig(IRQ_NO_EXTI0, IRQPriority);
+    
     if (PinNumber >= 0 && PinNumber <= 4) {
         *((void (**)(void))EXTI0_HANDLER_ADDR + PinNumber) = function;
     } else if (PinNumber >= 5 && PinNumber <= 9) {
