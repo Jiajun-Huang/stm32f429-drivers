@@ -23,6 +23,7 @@
 
 void GPIO_interrup_test(void);
 void GPIO_intrrupt_handler(void);
+void SPI_senddata_test(void);
 
 #include <stdint.h>
 #include <stm32f429.h>
@@ -30,8 +31,48 @@ void GPIO_intrrupt_handler(void);
 
 int main(void) {
     GPIO_interrup_test();
+    SPI_senddata_test();
     for (;;)
         ;
+}
+
+void SPI_senddata_test(void) {
+    GPIO_Handle_t SPIPins;
+
+    SPIPins.pGPIOx = GPIOB;
+    SPIPins.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+    SPIPins.GPIO_PinConfig.GPIO_PinAltFunMode = 5;
+    SPIPins.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+    SPIPins.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+    SPIPins.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+
+    // SCLK
+    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_13;
+    GPIO_Init(&SPIPins);
+
+    // MOSI
+    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_15;
+    GPIO_Init(&SPIPins);
+
+    SPI_Handle_t SPI2handle;
+
+    SPI2handle.pSPIx = SPI2;
+    SPI2handle.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FD;
+    SPI2handle.SPIConfig.SPI_DeviceMode = SPI_DEVICE_MODE_MASTER;
+    SPI2handle.SPIConfig.SPI_SclkSpeed =
+        SPI_SCLK_SPEED_DIV256; // generates sclk of 8MHz
+    SPI2handle.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
+    SPI2handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
+    SPI2handle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
+    SPI2handle.SPIConfig.SPI_SSM =
+        SPI_SSM_EN; // software slave management enabled for NSS pin
+
+    SPI_Init(&SPI2handle);
+
+    char user_data[] = "Hello world";
+    while (1) {
+        SPI_SendData(SPI2, (uint8_t *)user_data, strlen(user_data));
+    }
 }
 
 void GPIO_interrup_test(void) {
@@ -55,7 +96,7 @@ void GPIO_interrup_test(void) {
 
     GPIO_WriteToOutputPin(GPIOG, GPIO_PIN_13, SET);
     // register interrupt handler
-    GPIO_RegisterIRQHandler(GPIO_PIN_0, 15, GPIO_intrrupt_handler);
+    // GPIO_RegisterIRQHandler(GPIO_PIN_0, 15, GPIO_intrrupt_handler);
 }
 
 void GPIO_intrrupt_handler(void) {
@@ -63,4 +104,4 @@ void GPIO_intrrupt_handler(void) {
     GPIO_IRQHandling(GPIO_PIN_0);
 }
 
-// void EXTI0_IRQHandler(void) { GPIO_intrrupt_handler(); }
+void EXTI0_IRQHandler(void) { GPIO_intrrupt_handler(); }

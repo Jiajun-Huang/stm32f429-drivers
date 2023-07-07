@@ -56,7 +56,7 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
 
         // RXONLY bit must be set
         cr1.RXONLY = SET;
-    }
+    } 
 
     // 3. Configure the spi serial clock speed (baud rate)
     cr1.BR = pSPIHandle->SPIConfig.SPI_SclkSpeed;
@@ -73,16 +73,16 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
     // 7. configure the SSM
     cr1.SSM = pSPIHandle->SPIConfig.SPI_SSM;
 
-    // enable the SPE
-    cr1.SPE = SET;
-    pSPIHandle->pSPIx->CR1.SPE = SET;
 
-    // pull up the NSS pin internally
-    cr1.SSI = SET;
-    pSPIHandle->pSPIx->CR1.SSI = SET;
+
+    // // pull up the NSS pin internally
+     cr1.SSI = SET;
+     pSPIHandle->pSPIx->CR1.SSI = SET;
 
     // configure the CR1 register
     pSPIHandle->pSPIx->CR1 = cr1;
+
+    pSPIHandle->pSPIx->CR1.SPE = SET;
 }
 
 void SPI_DeInit(SPI_RegDef_t *pSPIx) {
@@ -106,36 +106,23 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len) {
         if (pSPIx->CR1.DFF) {
             // 16 bit DFF
             // 1. load the data in to the DR
-            pSPIx->DR.DR = *((uint16_t *)pTxBuffer);
+            pSPIx->DR = *((uint16_t *)pTxBuffer);
             Len -= 2;
             (uint16_t *)pTxBuffer++;
         } else {
             // 8 bit DFF
-            pSPIx->DR.DR = *pTxBuffer;
+            pSPIx->DR = *pTxBuffer;
             Len--;
             pTxBuffer++;
         }
     }
 }
 
-/*********************************************************************
- * @fn      		  - SPI_ReceiveData
- *
- * @brief             -
- *
- * @param[in]         -
- * @param[in]         -
- * @param[in]         -
- *
- * @return            -
- *
- * @Note              -
-
- */
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len) {
     // while (Len > 0) {
     //     // 1. wait until RXNE is set
-    //     while (SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) == (uint8_t)FLAG_RESET)
+    //     while (SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) ==
+    //     (uint8_t)FLAG_RESET)
     //         ;
 
     //     // 2. check the DFF bit in CR1
@@ -155,7 +142,6 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len) {
     // }
 }
 
-
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     if (EnOrDi == ENABLE) {
         pSPIx->CR1.SSI = SET;
@@ -164,7 +150,6 @@ void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     }
 }
 
-
 void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     if (EnOrDi == ENABLE) {
         pSPIx->CR2.SSOE = SET;
@@ -172,7 +157,6 @@ void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
         pSPIx->CR2.SSOE = RESET;
     }
 }
-
 
 void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi) {
 
@@ -203,7 +187,6 @@ void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi) {
     // }
 }
 
-
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority) {
     // 1. first lets find out the ipr register
     // uint8_t iprx = IRQNumber / 4;
@@ -219,7 +202,8 @@ uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
     // uint8_t state = pSPIHandle->TxState;
 
     // // if (state != SPI_BUSY_IN_TX) {
-    // //     // 1 . Save the Tx buffer address and Len information in some global
+    // //     // 1 . Save the Tx buffer address and Len information in some
+    // global
     // //     // variables
     // //     pSPIHandle->pTxBuffer = pTxBuffer;
     // //     pSPIHandle->TxLen = Len;
@@ -228,7 +212,8 @@ uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
     // //     //     transmission is over
     // //     pSPIHandle->TxState = SPI_BUSY_IN_TX;
 
-    // //     // 3. Enable the TXEIE control bit to get interrupt whenever TXE flag is
+    // //     // 3. Enable the TXEIE control bit to get interrupt whenever TXE
+    // flag is
     // //     // set in SR
     // //     pSPIHandle->pSPIx->CR2 |= (1 << SPI_CR2_TXEIE);
     // // }
@@ -246,7 +231,8 @@ uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
     //     pSPIHandle->pRxBuffer = pRxBuffer;
     //     pSPIHandle->RxLen = Len;
     //     // 2.  Mark the SPI state as busy in reception so that
-    //     //     no other code can take over same SPI peripheral until reception
+    //     //     no other code can take over same SPI peripheral until
+    //     reception
     //     //     is over
     //     pSPIHandle->RxState = SPI_BUSY_IN_RX;
 
@@ -321,8 +307,8 @@ static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle) {
     // do rxing as per the dff
     // if (pSPIHandle->pSPIx->CR1 & (1 << 11)) {
     //     // 16 bit
-    //     *((uint16_t *)pSPIHandle->pRxBuffer) = (uint16_t)pSPIHandle->pSPIx->DR;
-    //     pSPIHandle->RxLen -= 2;
+    //     *((uint16_t *)pSPIHandle->pRxBuffer) =
+    //     (uint16_t)pSPIHandle->pSPIx->DR; pSPIHandle->RxLen -= 2;
     //     pSPIHandle->pRxBuffer++;
     //     pSPIHandle->pRxBuffer++;
 

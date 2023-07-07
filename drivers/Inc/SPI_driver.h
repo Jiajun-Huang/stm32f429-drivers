@@ -14,13 +14,13 @@
  *  Configuration structure for SPIx peripheral
  */
 typedef struct {
-    uint8_t SPI_DeviceMode;
-    uint8_t SPI_BusConfig;
-    uint8_t SPI_SclkSpeed;
-    uint8_t SPI_DFF;
-    uint8_t SPI_CPOL;
-    uint8_t SPI_CPHA;
-    uint8_t SPI_SSM;
+    uint8_t SPI_DeviceMode; // master or slave
+    uint8_t SPI_BusConfig; // full duplex, half duplex, simplex
+    uint8_t SPI_SclkSpeed; // clock speed
+    uint8_t SPI_DFF; // data frame format
+    uint8_t SPI_CPOL; // clock polarity
+    uint8_t SPI_CPHA; // clock phase
+    uint8_t SPI_SSM; // software slave management
 } SPI_Config_t;
 
 /*

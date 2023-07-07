@@ -204,7 +204,7 @@ void GPIO_RegisterIRQHandler(uint8_t PinNumber, uint32_t IRQPriority,
 
     GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, ENABLE);
     GPIO_IRQPriorityConfig(IRQ_NO_EXTI0, IRQPriority);
-    
+
     if (PinNumber >= 0 && PinNumber <= 4) {
         *((void (**)(void))EXTI0_HANDLER_ADDR + PinNumber) = function;
     } else if (PinNumber >= 5 && PinNumber <= 9) {

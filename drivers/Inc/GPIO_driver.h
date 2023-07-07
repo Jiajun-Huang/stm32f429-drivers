@@ -57,6 +57,7 @@
 #define GPIO_PIN_PU 1  // pull-up
 #define GPIO_PIN_PD 2  // pull-down
 
+
 // GPIO interrupt vector table function address
 #define EXTI0_HANDLER_ADDR 0x00000058
 #define EXTI1_HANDLER_ADDR 0x0000005C
