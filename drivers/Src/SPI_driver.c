@@ -75,13 +75,12 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
 
 
 
-    // // pull up the NSS pin internally
-     cr1.SSI = SET;
-     pSPIHandle->pSPIx->CR1.SSI = SET;
+    
 
     // configure the CR1 register
     pSPIHandle->pSPIx->CR1 = cr1;
 
+    pSPIHandle->pSPIx->CR1.SSI = SET;
     pSPIHandle->pSPIx->CR1.SPE = SET;
 }
 
@@ -99,7 +98,7 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx) {
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len) {
     while (Len > 0) {
         // 1. wait until TXE is set
-        while (!pSPIx->SR.TXE)
+        while (!(pSPIx->SR.TXE))
             ;
 
         // 2. check the DFF bit in CR1

@@ -27,10 +27,12 @@ void SPI_senddata_test(void);
 
 #include <stdint.h>
 #include <stm32f429.h>
+#include <string.h>
+
 // #include <GPIO_driver.h>
 
 int main(void) {
-    GPIO_interrup_test();
+//    GPIO_interrup_test();
     SPI_senddata_test();
     for (;;)
         ;
@@ -39,7 +41,7 @@ int main(void) {
 void SPI_senddata_test(void) {
     GPIO_Handle_t SPIPins;
 
-    SPIPins.pGPIOx = GPIOB;
+    SPIPins.pGPIOx = GPIOA;
     SPIPins.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
     SPIPins.GPIO_PinConfig.GPIO_PinAltFunMode = 5;
     SPIPins.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
@@ -47,20 +49,27 @@ void SPI_senddata_test(void) {
     SPIPins.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 
     // SCLK
-    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_13;
+    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_5;
     GPIO_Init(&SPIPins);
 
     // MOSI
-    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_15;
+    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
     GPIO_Init(&SPIPins);
+
+    // MISO
+//    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_14;
+//    GPIO_Init(&SPIPins);
+//
+//    // NSS
+//    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_12;
 
     SPI_Handle_t SPI2handle;
 
-    SPI2handle.pSPIx = SPI2;
+    SPI2handle.pSPIx = SPI1;
     SPI2handle.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FD;
     SPI2handle.SPIConfig.SPI_DeviceMode = SPI_DEVICE_MODE_MASTER;
     SPI2handle.SPIConfig.SPI_SclkSpeed =
-        SPI_SCLK_SPEED_DIV256; // generates sclk of 8MHz
+        SPI_SCLK_SPEED_DIV2; // generates sclk of 8MHz
     SPI2handle.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
     SPI2handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
     SPI2handle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
@@ -71,7 +80,7 @@ void SPI_senddata_test(void) {
 
     char user_data[] = "Hello world";
     while (1) {
-        SPI_SendData(SPI2, (uint8_t *)user_data, strlen(user_data));
+        SPI_SendData(SPI1, (uint8_t *)user_data, strlen(user_data));
     }
 }
 
