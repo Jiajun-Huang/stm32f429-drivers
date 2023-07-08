@@ -128,7 +128,6 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
  * @param  *pSPIx: base address of the SPI peripheral
  * @param  *pTxBuffer: pointer to your data buffer
  * @param  Len: length of the data buffer
- */
 */
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);
 /**
@@ -148,7 +147,6 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len);
  * @param Len  length of the data buffer
  * @return uint8_t the current state of the SPI handle
  */
- */
 uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
                        uint32_t Len);
 
@@ -163,11 +161,7 @@ uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
 uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
                           uint32_t Len);
 
-/*
- * IRQ Configuration and ISR handling
- */
-void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
-void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
+
 
 /**
  * @brief Handle the interrupt

@@ -13,16 +13,14 @@
 //** CORE PERIPHERAL BASE ADDRESSES **//
 // ISER (Interrupt Set enable register) register addresses
 #define NVIC_ISER ((__vo uint32_t(*)[8])0xE000E100)
+
 // ICER (Interrupt Clear enable register) register addresses
 #define NVIC_ICER ((__vo uint32_t(*)[8])0xE000E180)
-
-// ICERx register addresses
-#define NVIC_ICER0 ((__vo uint32_t(*)[8])0xE000E180)
 
 // Priority register address calculation
 #define NVIC_IPR ((__vo uint32_t(*)[60])0xE000E400)
 
-#define NO_PR_BITS_IMPLEMENTED 4、
+#define NO_PR_BITS_IMPLEMENTED 4
 
 // Base addresses of Flash and SRAM memories
 #define FLASH_BASEADDR 0x08000000U
@@ -211,6 +209,30 @@
 #define SPI3_PCLK_DI() (RCC->APB1ENR &= ~(1 << 15))
 #define SPI4_PCLK_DI() (RCC->APB2ENR &= ~(1 << 13))
 
+#define SPI1_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB2RSTR |= (1 << 12);                                            \
+        RCC->APB2RSTR &= ~(1 << 12);                                           \
+    } while (0)
+
+#define SPI2_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB1RSTR |= (1 << 14);                                            \
+        RCC->APB1RSTR &= ~(1 << 14);                                           \
+    } while (0)
+
+#define SPI3_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB1RSTR |= (1 << 15);                                            \
+        RCC->APB1RSTR &= ~(1 << 15);                                           \
+    } while (0)
+
+#define SPI4_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB2RSTR |= (1 << 13);                                            \
+        RCC->APB2RSTR &= ~(1 << 13);                                           \
+    } while (0)
+
 // Clock enable/disable macros for USARTx peripherals
 #define USART1_PCLK_EN() (RCC->APB2ENR |= (1 << 4))
 #define USART2_PCLK_EN() (RCC->APB1ENR |= (1 << 17))
@@ -245,7 +267,6 @@
 #define IRQ_NO_SPI3 51
 #define IRQ_NO_SPI4 84
 
-
 // IRQ (Intr) priority levels
 #define NVIC_IRQ_PRI0 0
 #define NVIC_IRQ_PRI1 1
@@ -271,6 +292,22 @@
 #define RESET DISABLE
 #define GPIO_PIN_SET SET
 #define GPIO_PIN_RESET RESET
+
+/**
+ * @brief Open or close IRQ interrupt for given IRQ number
+ *
+ * @param IRQNumber  IRQ number
+ * @param EnorDi  ENABLE or DISABLE
+ */
+void IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
+
+/**
+ * @brief Configure priority for given IRQ number
+ *
+ * @param IRQNumber  IRQ number
+ * @param IRQPriority  IRQ priority
+ */
+void IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 
 #include "GPIO_driver.h"
 #include "SPI_driver.h"

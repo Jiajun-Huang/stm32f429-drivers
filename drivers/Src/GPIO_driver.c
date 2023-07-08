@@ -172,16 +172,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber) {
     pGPIOx->ODR ^= (1 << PinNumber);
 } // toggle the output pin
 
-void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi) {
-    uint8_t regSel = IRQNumber / 32; // determine which register to use
-    uint8_t bitPos = IRQNumber % 32; // determine which bit to use
 
-    if (EnorDi == ENABLE) {
-        *(NVIC_ISER[regSel]) |= (1U << bitPos);
-    } else {
-        *(NVIC_ICER[regSel]) |= (1U << bitPos);
-    }
-} // IRQNumber is the IRQ number of the interrupt
 void GPIO_IRQHandling(uint8_t PinNumber) {
     // clear the EXTI PR register corresponding to the pin number
     if (EXTI->PR & (1 << PinNumber)) {
@@ -190,25 +181,16 @@ void GPIO_IRQHandling(uint8_t PinNumber) {
     }
 } // IRQ handling from the pin number
 
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority) {
-    // find out the IPR register
-    uint8_t iprx = IRQNumber / 4;         // find out the IPR register
-    uint8_t iprx_section = IRQNumber % 4; // find out the section of the IPR
-                                          // register
-
-    *(NVIC_IPR[iprx]) |= (IRQPriority << (8 * iprx_section + 4));
-}
 
 void GPIO_RegisterIRQHandler(uint8_t PinNumber, uint32_t IRQPriority,
                              void (*function)(void)) {
 
-    GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, ENABLE);
-    GPIO_IRQPriorityConfig(IRQ_NO_EXTI0, IRQPriority);
+    IRQInterruptConfig(IRQ_NO_EXTI0, ENABLE);
+    IRQPriorityConfig(IRQ_NO_EXTI0, IRQPriority);
 
     if (PinNumber >= 0 && PinNumber <= 4) {
         *((void (**)(void))EXTI0_HANDLER_ADDR + PinNumber) = function;
     } else if (PinNumber >= 5 && PinNumber <= 9) {
-        *((void (**)(void))EXTI9_5_HANDLER_ADDR) = function;
     } else if (PinNumber >= 10 && PinNumber <= 15) {
         *((void (**)(void))EXTI15_10_HANDLER_ADDR) = function;
     }
