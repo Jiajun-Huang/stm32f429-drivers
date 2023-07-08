@@ -38,6 +38,8 @@ typedef struct {
     uint8_t RxState;    /* !< To store Rx state > */
 } SPI_Handle_t;
 
+typedef void (*SPI_CallbackFunc)(SPI_Handle_t *, uint8_t);
+
 /*
  * SPI application states
  */
@@ -48,10 +50,10 @@ typedef struct {
 /*
  * Possible SPI Application events
  */
-#define SPI_EVENT_TX_CMPLT 1
-#define SPI_EVENT_RX_CMPLT 2
-#define SPI_EVENT_OVR_ERR 3
-#define SPI_EVENT_CRC_ERR 4
+#define SPI_EVENT_TX_CMPLT 1 // Transmission complete
+#define SPI_EVENT_RX_CMPLT 2 // Reception complete
+#define SPI_EVENT_OVR_ERR 3  // Overrun error
+#define SPI_EVENT_CRC_ERR 4  // CRC error
 
 /*
  * @SPI_DeviceMode
@@ -121,10 +123,43 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
 /*
  * Data Send and Receive
  */
+/**
+ * @brief  Send data via SPI blocking mode
+ * @param  *pSPIx: base address of the SPI peripheral
+ * @param  *pTxBuffer: pointer to your data buffer
+ * @param  Len: length of the data buffer
+ */
+*/
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);
+/**
+ * @brief Receive data via SPI blocking mode
+ * 
+ * @param pSPIx base address of the SPI peripheral
+ * @param pRxBuffer  pointer to your data buffer
+ * @param Len  length of the data buffer
+ */
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len);
+
+/**
+ * @brief Send data via SPI non-blocking mode (interrupt) 
+ * This function will set the handle state to busy and then enable the TXEIE which will generate an interrupt
+ * @param pSPIHandle SPI handle structure gobal variable
+ * @param pTxBuffer  pointer to your data buffer
+ * @param Len  length of the data buffer
+ * @return uint8_t the current state of the SPI handle
+ */
+ */
 uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
                        uint32_t Len);
+
+/**
+ * @brief Receive data via SPI non-blocking mode (interrupt) 
+ *   This function will set the handle state to busy and then enable the RXNEIE which will generate an interrupt
+ * @param pSPIHandle SPI handle structure gobal variable
+ * @param pRxBuffer  pointer to your data buffer
+ * @param Len length of the data buffer
+ * @return uint8_t the current state of the SPI handle
+ */
 uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
                           uint32_t Len);
 
@@ -133,7 +168,14 @@ uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
  */
 void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
-void SPI_IRQHandling(SPI_Handle_t *pHandle);
+
+/**
+ * @brief Handle the interrupt
+ *  This function will be called from the SPI IRQ handler
+ * @param pHandle  SPI handle structure gobal variable
+ * @param SPI_CallbackFunc  SPI callback function
+ */
+void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *SPI_CallbackFunc);
 
 /*
  * Other Peripheral Control APIs
