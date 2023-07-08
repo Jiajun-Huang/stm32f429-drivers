@@ -56,7 +56,7 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
 
         // RXONLY bit must be set
         cr1.RXONLY = SET;
-    } 
+    }
 
     // 3. Configure the spi serial clock speed (baud rate)
     cr1.BR = pSPIHandle->SPIConfig.SPI_SclkSpeed;
@@ -73,15 +73,11 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
     // 7. configure the SSM
     cr1.SSM = pSPIHandle->SPIConfig.SPI_SSM;
 
-
-
-    
-
     // configure the CR1 register
     pSPIHandle->pSPIx->CR1 = cr1;
 
-    pSPIHandle->pSPIx->CR1.SSI = SET;
-    pSPIHandle->pSPIx->CR1.SPE = SET;
+    // pSPIHandle->pSPIx->CR1.SSI = SET;
+    // pSPIHandle->pSPIx->CR1.SPE = SET;
 }
 
 void SPI_DeInit(SPI_RegDef_t *pSPIx) {
@@ -118,30 +114,36 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len) {
 }
 
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len) {
-    // while (Len > 0) {
-    //     // 1. wait until RXNE is set
-    //     while (SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) ==
-    //     (uint8_t)FLAG_RESET)
-    //         ;
+    while (Len > 0) {
+        // 1. wait until RXNE is set
+        while (!(pSPIx->SR.RXNE))
+            ;
 
-    //     // 2. check the DFF bit in CR1
-    //     if ((pSPIx->CR1 & (1 << SPI_CR1_DFF))) {
-    //         // 16 bit DFF
-    //         // 1. load the data from DR to Rxbuffer address
-    //         *((uint16_t *)pRxBuffer) = pSPIx->DR;
-    //         Len--;
-    //         Len--;
-    //         (uint16_t *)pRxBuffer++;
-    //     } else {
-    //         // 8 bit DFF
-    //         *(pRxBuffer) = pSPIx->DR;
-    //         Len--;
-    //         pRxBuffer++;
-    //     }
-    // }
+        // 2. check the DFF bit in CR1
+        if (pSPIx->CR1.DFF) {
+            // 16 bit DFF
+            // 1. load the data from DR to Rxbuffer address
+            *((uint16_t *)pRxBuffer) = pSPIx->DR;
+            Len -= 2;
+            (uint16_t *)pRxBuffer++;
+        } else {
+            // 8 bit DFF
+            *(pRxBuffer) = pSPIx->DR;
+            Len--;
+            pRxBuffer++;
+        }
+    }
 }
 
-void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
+void SPI_PeripheralSwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
+    if (EnOrDi == ENABLE) {
+        pSPIx->CR1.SPE = SET;
+    } else {
+        pSPIx->CR1.SPE = RESET;
+    }
+}
+
+void SPI_SSISwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     if (EnOrDi == ENABLE) {
         pSPIx->CR1.SSI = SET;
     } else {
@@ -149,7 +151,7 @@ void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     }
 }
 
-void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
+void SPI_SSOESwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     if (EnOrDi == ENABLE) {
         pSPIx->CR2.SSOE = SET;
     } else {

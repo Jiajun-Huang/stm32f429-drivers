@@ -32,7 +32,7 @@ void SPI_senddata_test(void);
 // #include <GPIO_driver.h>
 
 int main(void) {
-//    GPIO_interrup_test();
+    //    GPIO_interrup_test();
     SPI_senddata_test();
     for (;;)
         ;
@@ -57,11 +57,11 @@ void SPI_senddata_test(void) {
     GPIO_Init(&SPIPins);
 
     // MISO
-//    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_14;
-//    GPIO_Init(&SPIPins);
-//
-//    // NSS
-//    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_12;
+    //    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_14;
+    //    GPIO_Init(&SPIPins);
+    //
+    //    // NSS
+    //    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_12;
 
     SPI_Handle_t SPI2handle;
 
@@ -69,7 +69,7 @@ void SPI_senddata_test(void) {
     SPI2handle.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FD;
     SPI2handle.SPIConfig.SPI_DeviceMode = SPI_DEVICE_MODE_MASTER;
     SPI2handle.SPIConfig.SPI_SclkSpeed =
-        SPI_SCLK_SPEED_DIV2; // generates sclk of 8MHz
+        SPI_SCLK_SPEED_DIV8; // generates sclk of 8MHz
     SPI2handle.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
     SPI2handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
     SPI2handle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
@@ -81,6 +81,9 @@ void SPI_senddata_test(void) {
     char user_data[] = "Hello world";
     while (1) {
         SPI_SendData(SPI1, (uint8_t *)user_data, strlen(user_data));
+        for (int i = 0; i < 1000; i++) {
+            /* code */
+        }
     }
 }
 

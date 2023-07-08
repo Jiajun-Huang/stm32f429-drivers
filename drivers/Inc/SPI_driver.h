@@ -15,12 +15,12 @@
  */
 typedef struct {
     uint8_t SPI_DeviceMode; // master or slave
-    uint8_t SPI_BusConfig; // full duplex, half duplex, simplex
-    uint8_t SPI_SclkSpeed; // clock speed
-    uint8_t SPI_DFF; // data frame format
-    uint8_t SPI_CPOL; // clock polarity
-    uint8_t SPI_CPHA; // clock phase
-    uint8_t SPI_SSM; // software slave management
+    uint8_t SPI_BusConfig;  // full duplex, half duplex, simplex
+    uint8_t SPI_SclkSpeed;  // clock speed
+    uint8_t SPI_DFF;        // data frame format
+    uint8_t SPI_CPOL;       // clock polarity
+    uint8_t SPI_CPHA;       // clock phase
+    uint8_t SPI_SSM;        // software slave management
 } SPI_Config_t;
 
 /*
@@ -103,8 +103,9 @@ typedef struct {
 #define SPI_SSM_DI 0
 
 /******************************************************************************************
- *								APIs supported by
- *this driver For more information about the APIs check the function definitions
+ *								APIs supported
+ *by this driver For more information about the APIs check the function
+ *definitions
  ******************************************************************************************/
 /*
  * Peripheral Clock setup
@@ -122,7 +123,6 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
  */
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len);
-
 uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
                        uint32_t Len);
 uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
@@ -138,9 +138,26 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle);
 /*
  * Other Peripheral Control APIs
  */
-// void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
-void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
-void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
+/**
+ * @brief  Enable or disable the given SPI peripheral
+ * @param  *pSPIx: base address of the SPI peripheral
+ * @param  EnOrDi: ENABLE or DISABLE macros
+ */
+void SPI_PeripheralSwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
+/**
+ * @brief Enable or disable the given SPI peripheral
+ *
+ * @param pSPIx  base address of the SPI peripheral
+ * @param EnOrDi  ENABLE or DISABLE macros
+ */
+void SPI_SSISwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
+/**
+ * @brief Enable or disable the given SPI peripheral
+ *
+ * @param pSPIx  base address of the SPI peripheral
+ * @param EnOrDi  ENABLE or DISABLE macros
+ */
+void SPI_SSOESwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
 
 void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx);
 void SPI_CloseTransmisson(SPI_Handle_t *pSPIHandle);
