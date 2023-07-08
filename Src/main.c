@@ -77,13 +77,12 @@ void SPI_senddata_test(void) {
         SPI_SSM_EN; // software slave management enabled for NSS pin
 
     SPI_Init(&SPI2handle);
+    SPI_SSISwich(SPI1, ENABLE);
+    SPI_PeripheralSwich(SPI1, ENABLE);
 
     char user_data[] = "Hello world";
     while (1) {
         SPI_SendData(SPI1, (uint8_t *)user_data, strlen(user_data));
-        for (int i = 0; i < 1000; i++) {
-            /* code */
-        }
     }
 }
 

@@ -5,9 +5,9 @@ void IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi){
     uint8_t bitPos = IRQNumber % 32; // determine which bit to use
 
     if (EnorDi == ENABLE) {
-        *(NVIC_ISER[regSel]) |= (1U << bitPos);
+        *(NVIC_ISER + regSel) |= (1U << bitPos);
     } else {
-        *(NVIC_ICER[regSel]) |= (1U << bitPos);
+        *(NVIC_ICER + regSel) |= (1U << bitPos);
     }
 }
 void IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
@@ -16,7 +16,7 @@ void IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
     uint8_t iprx_section = IRQNumber % 4; // find out the section of the IPR
                                           // register
 
-    *(NVIC_IPR[iprx]) |= (IRQPriority << (8 * iprx_section + 4));
+    *(NVIC_IPR + iprx) |= (IRQPriority << (8 * iprx_section + 4));
 }
 
 

@@ -8,11 +8,11 @@
 #include "SPI_driver.h"
 
 static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle,
-                                     SPI_CallbackFunc *callbackFunc);
+                                     SPI_CallbackFunc callbackFunc);
 static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle,
-                                      SPI_CallbackFunc *callbackFunc);
+                                      SPI_CallbackFunc callbackFunc);
 static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle,
-                                         SPI_CallbackFunc *callbackFunc);
+                                         SPI_CallbackFunc callbackFunc);
 
 void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi) {
 
@@ -160,7 +160,6 @@ void SPI_SSOESwich(SPI_RegDef_t *pSPIx, uint8_t EnOrDi) {
     }
 }
 
-
 uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
                        uint32_t Len) {
     uint8_t state = pSPIHandle->TxState;
@@ -204,7 +203,7 @@ uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
     return state;
 }
 
-void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *pCallbackFunc) {
+void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc callbackFunc) {
 
     register uint8_t isBufferEmpty, isInterruptEnabled;
 
@@ -214,7 +213,7 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *pCallbackFunc) {
 
     if (isBufferEmpty && isInterruptEnabled) {
         // handle TXE
-        spi_txe_interrupt_handle(pHandle, pCallbackFunc);
+        spi_txe_interrupt_handle(pHandle, callbackFunc);
     }
 
     // check for RXNE
@@ -223,7 +222,7 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *pCallbackFunc) {
 
     if (isBufferEmpty && isInterruptEnabled) {
         // handle RXNE
-        spi_rxne_interrupt_handle(pHandle, pCallbackFunc);
+        spi_rxne_interrupt_handle(pHandle, callbackFunc);
     }
 
     // check for ovr flag
@@ -232,7 +231,7 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *pCallbackFunc) {
 
     if (isOverRuned && isInterruptEnabled) {
         // handle ovr error
-        spi_ovr_err_interrupt_handle(pHandle, pCallbackFunc);
+        spi_ovr_err_interrupt_handle(pHandle, callbackFunc);
     }
 
     // CRC error
@@ -243,7 +242,7 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *pCallbackFunc) {
 // some helper function implementations
 
 static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle,
-                                     SPI_CallbackFunc *pCallbackFunc) {
+                                     SPI_CallbackFunc callbackFunc) {
     // check the DFF bit in CR1
     if (pSPIHandle->pSPIx->CR1.DFF) {
         // 16 bit DFF
@@ -264,12 +263,12 @@ static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle,
 
         // this prevents interrupts from setting up of TXE flag
         SPI_CloseTransmisson(pSPIHandle);
-        (*pCallbackFunc)(pSPIHandle, SPI_EVENT_TX_CMPLT);
+        callbackFunc(pSPIHandle, SPI_EVENT_TX_CMPLT);
     }
 }
 
 static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle,
-                                      SPI_CallbackFunc *pCallbackFunc) {
+                                      SPI_CallbackFunc callbackFunc) {
     // do rxing as per the dff
     if (pSPIHandle->pSPIx->CR1.RXONLY) {
         // 16 bit
@@ -288,12 +287,12 @@ static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle,
     if (!pSPIHandle->RxLen) {
         // reception is complete
         SPI_CloseReception(pSPIHandle);
-        (*pCallbackFunc)(pSPIHandle, SPI_EVENT_RX_CMPLT);
+        callbackFunc(pSPIHandle, SPI_EVENT_RX_CMPLT);
     }
 }
 
 static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle,
-                                         SPI_CallbackFunc *pCallbackFunc) {
+                                         SPI_CallbackFunc callbackFunc) {
 
     uint8_t temp;
     // 1. clear the ovr flag
@@ -303,7 +302,7 @@ static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle,
     }
     (void)temp;
     // 2. inform the application
-    (*pCallbackFunc)(pSPIHandle, SPI_EVENT_OVR_ERR);
+    callbackFunc(pSPIHandle, SPI_EVENT_OVR_ERR);
 }
 
 void SPI_CloseTransmisson(SPI_Handle_t *pSPIHandle) {

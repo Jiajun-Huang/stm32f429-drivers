@@ -12,13 +12,13 @@
 
 //** CORE PERIPHERAL BASE ADDRESSES **//
 // ISER (Interrupt Set enable register) register addresses
-#define NVIC_ISER ((__vo uint32_t(*)[8])0xE000E100)
+#define NVIC_ISER (uint32_t *) 0xE000E100
 
 // ICER (Interrupt Clear enable register) register addresses
-#define NVIC_ICER ((__vo uint32_t(*)[8])0xE000E180)
+#define NVIC_ICER (uint32_t *) 0xE000E180
 
 // Priority register address calculation
-#define NVIC_IPR ((__vo uint32_t(*)[60])0xE000E400)
+#define NVIC_IPR (uint32_t *) 0xE000E400
 
 #define NO_PR_BITS_IMPLEMENTED 4
 
@@ -266,6 +266,8 @@
 #define IRQ_NO_SPI2 36
 #define IRQ_NO_SPI3 51
 #define IRQ_NO_SPI4 84
+#define IRQ_NO_SPI5 85
+#define IRQ_NO_SPI6 86
 
 // IRQ (Intr) priority levels
 #define NVIC_IRQ_PRI0 0

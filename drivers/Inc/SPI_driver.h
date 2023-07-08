@@ -128,11 +128,11 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
  * @param  *pSPIx: base address of the SPI peripheral
  * @param  *pTxBuffer: pointer to your data buffer
  * @param  Len: length of the data buffer
-*/
+ */
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);
 /**
  * @brief Receive data via SPI blocking mode
- * 
+ *
  * @param pSPIx base address of the SPI peripheral
  * @param pRxBuffer  pointer to your data buffer
  * @param Len  length of the data buffer
@@ -140,8 +140,9 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len);
 
 /**
- * @brief Send data via SPI non-blocking mode (interrupt) 
- * This function will set the handle state to busy and then enable the TXEIE which will generate an interrupt
+ * @brief Send data via SPI non-blocking mode (interrupt)
+ * This function will set the handle state to busy and then enable the TXEIE
+ * which will generate an interrupt
  * @param pSPIHandle SPI handle structure gobal variable
  * @param pTxBuffer  pointer to your data buffer
  * @param Len  length of the data buffer
@@ -151,8 +152,9 @@ uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
                        uint32_t Len);
 
 /**
- * @brief Receive data via SPI non-blocking mode (interrupt) 
- *   This function will set the handle state to busy and then enable the RXNEIE which will generate an interrupt
+ * @brief Receive data via SPI non-blocking mode (interrupt)
+ *   This function will set the handle state to busy and then enable the RXNEIE
+ * which will generate an interrupt
  * @param pSPIHandle SPI handle structure gobal variable
  * @param pRxBuffer  pointer to your data buffer
  * @param Len length of the data buffer
@@ -161,15 +163,13 @@ uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer,
 uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer,
                           uint32_t Len);
 
-
-
 /**
  * @brief Handle the interrupt
  *  This function will be called from the SPI IRQ handler
  * @param pHandle  SPI handle structure gobal variable
  * @param SPI_CallbackFunc  SPI callback function
  */
-void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc *SPI_CallbackFunc);
+void SPI_IRQHandling(SPI_Handle_t *pHandle, SPI_CallbackFunc SPI_CallbackFunc);
 
 /*
  * Other Peripheral Control APIs
