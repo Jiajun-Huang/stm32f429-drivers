@@ -326,10 +326,3 @@ void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx) {
     // temp = pSPIx->SR;
     // (void)temp;
 }
-
-// __weak void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle,
-//                                          uint8_t AppEv) {
-
-//     // This is a weak implementation . the user application may override this
-//     // function.
-// }
