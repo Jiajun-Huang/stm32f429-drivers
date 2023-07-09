@@ -16,60 +16,103 @@
  ******************************************************************************
  */
 
-#include <stdint.h>
-#include "stm32f429xx.h"
-// #include "GPIO_driver.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
+#warning                                                                       \
+    "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-int main(void)
-{
-    GPIO_PinConfig_t gpioPinConfig = {
-        .GPIO_PinNumber = GPIO_PIN_NO_13,
-        .GPIO_PinMode = GPIO_MODE_OUT,
-        .GPIO_PinSpeed = GPIO_SPEED_FAST,
-        .GPIO_PinOPType = GPIO_OP_TYPE_PP,
-        .GPIO_PinPuPdControl = GPIO_PIN_PD,
-        .GPIO_PinAltFunMode = 0
-    };
-    
-    GPIO_Handle_t gpioLed = {
-        .pGPIOx = GPIOG,
-        .GPIO_PinConfig = gpioPinConfig
-    };
-    
-    GPIO_PeriClockControl(GPIOG, ENABLE);
-    GPIO_Init(&gpioLed); 
-    GPIO_WriteToOutputPin(GPIOG, GPIO_PIN_NO_13, RESET);
+void GPIO_interrup_test(void);
+void GPIO_intrrupt_handler(void);
+void SPI_senddata_test(void);
 
-    gpioPinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-    gpioPinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
+#include <stdint.h>
+#include <stm32f429.h>
+#include <string.h>
 
-    gpioLed = (GPIO_Handle_t) {
-        .pGPIOx = GPIOB,
-        .GPIO_PinConfig = gpioPinConfig
-    };
+// #include <GPIO_driver.h>
 
-    GPIO_Init(&gpioLed);
-    GPIO_IRQPriorityConfig(IRQ_NO_EXTI0, NVIC_IRQ_PRI15);
-    GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, ENABLE);
-
-
-    
-    // while (1)
-    // {
-    //     GPIO_ToggleOutputPin(GPIOG, GPIO_PIN_NO_13);
-    //     for (int i = 0; i < 500000; i++);
-    // }
-
-	for(;;);
-
-
+int main(void) {
+    //    GPIO_interrup_test();
+    SPI_senddata_test();
+    for (;;)
+        ;
 }
 
-void EXTI0_IRQHandler(void)
-{
-    GPIO_IRQHandling(GPIO_PIN_NO_0);
-    GPIO_ToggleOutputPin(GPIOG, GPIO_PIN_NO_13);
+void SPI_senddata_test(void) {
+    GPIO_Handle_t SPIPins;
+
+    SPIPins.pGPIOx = GPIOA;
+    SPIPins.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+    SPIPins.GPIO_PinConfig.GPIO_PinAltFunMode = 5;
+    SPIPins.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+    SPIPins.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+    SPIPins.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+
+    // SCLK
+    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_5;
+    GPIO_Init(&SPIPins);
+
+    // MOSI
+    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
+    GPIO_Init(&SPIPins);
+
+    // MISO
+    //    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_14;
+    //    GPIO_Init(&SPIPins);
+    //
+    //    // NSS
+    //    SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_12;
+
+    SPI_Handle_t SPI2handle;
+
+    SPI2handle.pSPIx = SPI1;
+    SPI2handle.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FD;
+    SPI2handle.SPIConfig.SPI_DeviceMode = SPI_DEVICE_MODE_MASTER;
+    SPI2handle.SPIConfig.SPI_SclkSpeed =
+        SPI_SCLK_SPEED_DIV8; // generates sclk of 8MHz
+    SPI2handle.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
+    SPI2handle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
+    SPI2handle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
+    SPI2handle.SPIConfig.SPI_SSM =
+        SPI_SSM_EN; // software slave management enabled for NSS pin
+
+    SPI_Init(&SPI2handle);
+    SPI_SSISwich(SPI1, ENABLE);
+    SPI_PeripheralSwich(SPI1, ENABLE);
+
+    char user_data[] = "Hello world";
+    while (1) {
+        SPI_SendData(SPI1, (uint8_t *)user_data, strlen(user_data));
+    }
 }
+
+void GPIO_interrup_test(void) {
+    // config PB0 as input interrupt
+    GPIO_Handle_t gpio = {.GPIO_PinConfig = {.GPIO_PinNumber = GPIO_PIN_0,
+                                             .GPIO_PinMode = GPIO_MODE_IT_FT,
+                                             .GPIO_PinSpeed = GPIO_SPEED_FAST,
+                                             .GPIO_PinPuPdControl = GPIO_PIN_PU,
+                                             .GPIO_PinOPType = GPIO_OP_TYPE_PP,
+                                             .GPIO_PinAltFunMode = 0},
+                          .pGPIOx = GPIOB};
+
+    GPIO_Init(&gpio);
+
+    // config PG13 as output
+    gpio.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_13;
+    gpio.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
+    gpio.pGPIOx = GPIOG;
+
+    GPIO_Init(&gpio);
+
+    GPIO_WriteToOutputPin(GPIOG, GPIO_PIN_13, SET);
+    // register interrupt handler
+    // GPIO_RegisterIRQHandler(GPIO_PIN_0, 15, GPIO_intrrupt_handler);
+}
+
+void GPIO_intrrupt_handler(void) {
+    GPIO_ToggleOutputPin(GPIOG, GPIO_PIN_13);
+    GPIO_IRQHandling(GPIO_PIN_0);
+}
+
+void EXTI0_IRQHandler(void) { GPIO_intrrupt_handler(); }

@@ -1,32 +1,26 @@
 /*
- * stm32f429xx.h
+ * stm32f429.h
  *
  *  Created on: Jul 2, 2023
- *      Author: jiajun
+ *      Author: Jiajun
  */
+
+#ifndef INC_STM32F429_H_
+#define INC_STM32F429_H_
+#include "type_def.h"
 #include <stdint.h>
 
-#ifndef INC_STM32F429XX_H_
-#define INC_STM32F429XX_H_
+//** CORE PERIPHERAL BASE ADDRESSES **//
+// ISER (Interrupt Set enable register) register addresses
+#define NVIC_ISER (uint32_t *) 0xE000E100
 
-#define __vo volatile
-
-// ISERx register addresses
-#define NVIC_ISER0 (__vo uint32_t *)0xE000E100
-#define NVIC_ISER1 (__vo uint32_t *)0xE000E104
-#define NVIC_ISER2 (__vo uint32_t *)0xE000E108
-#define NVIC_ISER3 (__vo uint32_t *)0xE000E10C
-
-// ICERx register addresses
-#define NVIC_ICER0 (__vo uint32_t *)0xE000E180
-#define NVIC_ICER1 (__vo uint32_t *)0xE000E184
-#define NVIC_ICER2 (__vo uint32_t *)0xE000E188
-#define NVIC_ICER3 (__vo uint32_t *)0xE000E18C
+// ICER (Interrupt Clear enable register) register addresses
+#define NVIC_ICER (uint32_t *) 0xE000E180
 
 // Priority register address calculation
-#define NVIC_PR_BASE_ADDR (__vo uint32_t *)0xE000E400
+#define NVIC_IPR (uint32_t *) 0xE000E400
 
-
+#define NO_PR_BITS_IMPLEMENTED 4
 
 // Base addresses of Flash and SRAM memories
 #define FLASH_BASEADDR 0x08000000U
@@ -78,84 +72,12 @@
 #define SYSCFG_BASEADDR (APB2PERIPH_BASEADDR + 0x3800)
 #define RCC_BASEADDR (AHB1PERIPH_BASEADDR + 0x3800)
 
-typedef struct {
-    __vo uint32_t IMR;   // Interrupt mask register
-    __vo uint32_t EMR;   // Event mask register
-    __vo uint32_t RTSR;  // Rising trigger selection register
-    __vo uint32_t FTSR;  // Falling trigger selection register
-    __vo uint32_t SWIER; // Software interrupt event register
-    __vo uint32_t PR;    // Pending register
-} EXTI_RegDef_t;
-
 #define EXTI ((EXTI_RegDef_t *)EXTI_BASEADDR)
-
-typedef struct {
-    __vo uint32_t MEMRMP; // SYSCFG memory remap register
-    __vo uint32_t PMC;    // SYSCFG peripheral mode configuration register
-    __vo uint32_t
-        EXTICR[4];         // SYSCFG external interrupt configuration register 1
-    uint32_t RESERVED1[2]; // Reserved, 0x14-0x18
-    __vo uint32_t CMPCR;   // Compensation cell control register
-    uint32_t RESERVED2[2]; // Reserved, 0x20-0x24
-    __vo uint32_t CFGR;    // SYSCFG configuration register
-} SYSCFG_RegDef_t;
-
 #define SYSCFG ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
-
-typedef struct {
-    __vo uint32_t CR;         // RCC clock control register
-    __vo uint32_t PLLCFGR;    // RCC PLL configuration register
-    __vo uint32_t CFGR;       // RCC clock configuration register
-    __vo uint32_t CIR;        // RCC clock interrupt register
-    __vo uint32_t AHB1RSTR;   // RCC AHB1 peripheral reset register
-    __vo uint32_t AHB2RSTR;   // RCC AHB2 peripheral reset register
-    __vo uint32_t AHB3RSTR;   // RCC AHB3 peripheral reset register
-    uint32_t RESERVED0;       // Reserved, 0x1C
-    __vo uint32_t APB1RSTR;   // RCC APB1 peripheral reset register
-    __vo uint32_t APB2RSTR;   // RCC APB2 peripheral reset register
-    uint32_t RESERVED1[2];    // Reserved, 0x28-0x2C
-    __vo uint32_t AHB1ENR;    // RCC AHB1 peripheral clock enable register
-    __vo uint32_t AHB2ENR;    // RCC AHB2 peripheral clock enable register
-    __vo uint32_t AHB3ENR;    // RCC AHB3 peripheral clock enable register
-    uint32_t RESERVED2;       // Reserved, 0x3C
-    __vo uint32_t APB1ENR;    // RCC APB1 peripheral clock enable register
-    __vo uint32_t APB2ENR;    // RCC APB2 peripheral clock enable register
-    uint32_t RESERVED3[2];    // Reserved, 0x48-0x4C
-    __vo uint32_t AHB1LPENR;  // RCC AHB1 peripheral clock enable in low
-                              // power mode register
-    __vo uint32_t AHB2LPENR;  // RCC AHB2 peripheral clock enable in low
-                              // power mode register
-    __vo uint32_t AHB3LPENR;  // RCC AHB3 peripheral clock enable in low
-                              // power mode register
-    uint32_t RESERVED4;       // Reserved, 0x5C
-    __vo uint32_t APB1LPENR;  // RCC APB1 peripheral clock enable in low
-                              // power mode register
-    __vo uint32_t APB2LPENR;  // RCC APB2 peripheral clock enable in low
-                              // power mode register
-    uint32_t RESERVED5[2];    // Reserved, 0x68-0x6C
-    __vo uint32_t BDCR;       // RCC Backup domain control register
-    __vo uint32_t CSR;        // RCC clock control & status register
-    uint32_t RESERVED6[2];    // Reserved, 0x78-0x7C
-    __vo uint32_t SSCGR;      // RCC spread spectrum clock generation register
-    __vo uint32_t PLLI2SCFGR; // RCC PLLI2S configuration register
-} RCC_RegDef_t;
 
 #define RCC ((RCC_RegDef_t *)RCC_BASEADDR)
 
-// Peripheral register definition structures
-typedef struct {
-    __vo uint32_t MODER;   // GPIO port mode register
-    __vo uint32_t OTYPER;  // GPIO port output type register
-    __vo uint32_t OSPEEDR; // GPIO port output speed register
-    __vo uint32_t PUPDR;   // GPIO port pull-up/pull-down register
-    __vo uint32_t IDR;     // GPIO port input data register
-    __vo uint32_t ODR;     // GPIO port output data register
-    __vo uint32_t BSRR;    // GPIO port bit set/reset register
-    __vo uint32_t LCKR;    // GPIO port configuration lock register
-    __vo uint32_t AFR[2];  // GPIO alternate function low register
-                           // GPIO alternate function high register
-} GPIO_RegDef_t;
-
+//** object definitions start **//
 #define GPIOA ((GPIO_RegDef_t *)GPIOA_BASEADDR)
 #define GPIOB ((GPIO_RegDef_t *)GPIOB_BASEADDR)
 #define GPIOC ((GPIO_RegDef_t *)GPIOC_BASEADDR)
@@ -165,6 +87,27 @@ typedef struct {
 #define GPIOG ((GPIO_RegDef_t *)GPIOG_BASEADDR)
 #define GPIOH ((GPIO_RegDef_t *)GPIOH_BASEADDR)
 #define GPIOI ((GPIO_RegDef_t *)GPIOI_BASEADDR)
+
+#define RCC ((RCC_RegDef_t *)RCC_BASEADDR)
+#define EXTI ((EXTI_RegDef_t *)EXTI_BASEADDR)
+#define SYSCFG ((SYSCFG_RegDef_t *)SYSCFG_BASEADDR)
+
+#define SPI1 ((SPI_RegDef_t *)SPI1_BASEADDR)
+#define SPI2 ((SPI_RegDef_t *)SPI2_BASEADDR)
+#define SPI3 ((SPI_RegDef_t *)SPI3_BASEADDR)
+
+// #define I2C1 ((I2C_RegDef_t *)I2C1_BASEADDR)
+// #define I2C2 ((I2C_RegDef_t *)I2C2_BASEADDR)
+// #define I2C3 ((I2C_RegDef_t *)I2C3_BASEADDR)
+
+// #define USART1 ((USART_RegDef_t *)USART1_BASEADDR)
+// #define USART2 ((USART_RegDef_t *)USART2_BASEADDR)
+// #define USART3 ((USART_RegDef_t *)USART3_BASEADDR)
+// #define UART4 ((USART_RegDef_t *)UART4_BASEADDR)
+// #define UART5 ((USART_RegDef_t *)UART5_BASEADDR)
+// #define USART6 ((USART_RegDef_t *)USART6_BASEADDR)
+
+//** object definitions end **//
 
 // Clock enable/disable macros for GPIOx peripherals
 #define GPIOA_PCLK_EN() (RCC->AHB1ENR |= (1 << 0))
@@ -242,6 +185,10 @@ typedef struct {
         RCC->AHB1STR &= 0xFFFFFF00                                             \
     } while (0)
 
+//** GPIO object end **//
+
+//** SPI object start **//
+
 // Clock enable/disable macros for I2Cx peripherals
 #define I2C1_PCLK_EN() (RCC->APB1ENR |= (1 << 21))
 #define I2C2_PCLK_EN() (RCC->APB1ENR |= (1 << 22))
@@ -262,6 +209,30 @@ typedef struct {
 #define SPI3_PCLK_DI() (RCC->APB1ENR &= ~(1 << 15))
 #define SPI4_PCLK_DI() (RCC->APB2ENR &= ~(1 << 13))
 
+#define SPI1_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB2RSTR |= (1 << 12);                                            \
+        RCC->APB2RSTR &= ~(1 << 12);                                           \
+    } while (0)
+
+#define SPI2_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB1RSTR |= (1 << 14);                                            \
+        RCC->APB1RSTR &= ~(1 << 14);                                           \
+    } while (0)
+
+#define SPI3_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB1RSTR |= (1 << 15);                                            \
+        RCC->APB1RSTR &= ~(1 << 15);                                           \
+    } while (0)
+
+#define SPI4_REG_RESET()                                                       \
+    do {                                                                       \
+        RCC->APB2RSTR |= (1 << 13);                                            \
+        RCC->APB2RSTR &= ~(1 << 13);                                           \
+    } while (0)
+
 // Clock enable/disable macros for USARTx peripherals
 #define USART1_PCLK_EN() (RCC->APB2ENR |= (1 << 4))
 #define USART2_PCLK_EN() (RCC->APB1ENR |= (1 << 17))
@@ -281,7 +252,7 @@ typedef struct {
 #define SYSCFG_PCLK_EN() (RCC->APB2ENR |= (1 << 14))
 #define SYSCFG_PCLK_DI() (RCC->APB2ENR &= ~(1 << 14))
 
-// IRQ (Intr) numbers of STM32F407x MCU
+// IRQ (Intr) numbers for EXTI obtain from vector table of position number
 #define IRQ_NO_EXTI0 6
 #define IRQ_NO_EXTI1 7
 #define IRQ_NO_EXTI2 8
@@ -289,6 +260,14 @@ typedef struct {
 #define IRQ_NO_EXTI4 10
 #define IRQ_NO_EXTI9_5 23
 #define IRQ_NO_EXTI15_10 40
+
+// IRQ (Intr) numbers for SPIx peripherals
+#define IRQ_NO_SPI1 35
+#define IRQ_NO_SPI2 36
+#define IRQ_NO_SPI3 51
+#define IRQ_NO_SPI4 84
+#define IRQ_NO_SPI5 85
+#define IRQ_NO_SPI6 86
 
 // IRQ (Intr) priority levels
 #define NVIC_IRQ_PRI0 0
@@ -308,7 +287,6 @@ typedef struct {
 #define NVIC_IRQ_PRI14 14
 #define NVIC_IRQ_PRI15 15
 
-
 // some generic macros
 #define ENABLE 1
 #define DISABLE 0
@@ -317,6 +295,23 @@ typedef struct {
 #define GPIO_PIN_SET SET
 #define GPIO_PIN_RESET RESET
 
-#include "GPIO_driver.h"
+/**
+ * @brief Open or close IRQ interrupt for given IRQ number
+ *
+ * @param IRQNumber  IRQ number
+ * @param EnorDi  ENABLE or DISABLE
+ */
+void IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 
-#endif /* INC_STM32F407XX_H_ */
+/**
+ * @brief Configure priority for given IRQ number
+ *
+ * @param IRQNumber  IRQ number
+ * @param IRQPriority  IRQ priority
+ */
+void IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
+
+#include "GPIO_driver.h"
+#include "SPI_driver.h"
+
+#endif /* INC_STM32F429_H_ */
