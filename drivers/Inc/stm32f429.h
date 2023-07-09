@@ -12,13 +12,13 @@
 
 //** CORE PERIPHERAL BASE ADDRESSES **//
 // ISER (Interrupt Set enable register) register addresses
-#define NVIC_ISER (uint32_t *) 0xE000E100
+#define NVIC_ISER (uint32_t *)0xE000E100
 
 // ICER (Interrupt Clear enable register) register addresses
-#define NVIC_ICER (uint32_t *) 0xE000E180
+#define NVIC_ICER (uint32_t *)0xE000E180
 
 // Priority register address calculation
-#define NVIC_IPR (uint32_t *) 0xE000E400
+#define NVIC_IPR (uint32_t *)0xE000E400
 
 #define NO_PR_BITS_IMPLEMENTED 4
 
@@ -96,9 +96,9 @@
 #define SPI2 ((SPI_RegDef_t *)SPI2_BASEADDR)
 #define SPI3 ((SPI_RegDef_t *)SPI3_BASEADDR)
 
-// #define I2C1 ((I2C_RegDef_t *)I2C1_BASEADDR)
-// #define I2C2 ((I2C_RegDef_t *)I2C2_BASEADDR)
-// #define I2C3 ((I2C_RegDef_t *)I2C3_BASEADDR)
+#define I2C1 ((I2C_RegDef_t *)I2C1_BASEADDR)
+#define I2C2 ((I2C_RegDef_t *)I2C2_BASEADDR)
+#define I2C3 ((I2C_RegDef_t *)I2C3_BASEADDR)
 
 // #define USART1 ((USART_RegDef_t *)USART1_BASEADDR)
 // #define USART2 ((USART_RegDef_t *)USART2_BASEADDR)
@@ -134,55 +134,55 @@
 
 #define GPIO_BASEADDR_TO_CODE(x) (((uintptr_t)(x) - ((uintptr_t)GPIOA)) >> 10)
 
-#define GPIOA_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 0);                                             \
-        RCC->AHB1RSTR &= ~(1 << 0);                                            \
+#define GPIOA_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 0);  \
+        RCC->AHB1RSTR &= ~(1 << 0); \
     } while (0)
-#define GPIOB_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 1);                                             \
-        RCC->AHB1RSTR &= ~(1 << 1);                                            \
+#define GPIOB_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 1);  \
+        RCC->AHB1RSTR &= ~(1 << 1); \
     } while (0)
-#define GPIOC_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 2);                                             \
-        RCC->AHB1RSTR &= ~(1 << 2);                                            \
+#define GPIOC_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 2);  \
+        RCC->AHB1RSTR &= ~(1 << 2); \
     } while (0)
-#define GPIOD_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 3);                                             \
-        RCC->AHB1RSTR &= ~(1 << 3);                                            \
+#define GPIOD_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 3);  \
+        RCC->AHB1RSTR &= ~(1 << 3); \
     } while (0)
-#define GPIOE_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 4);                                             \
-        RCC->AHB1RSTR &= ~(1 << 4);                                            \
+#define GPIOE_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 4);  \
+        RCC->AHB1RSTR &= ~(1 << 4); \
     } while (0)
-#define GPIOF_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 5);                                             \
-        RCC->AHB1RSTR &= ~(1 << 5);                                            \
+#define GPIOF_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 5);  \
+        RCC->AHB1RSTR &= ~(1 << 5); \
     } while (0)
-#define GPIOG_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 6);                                             \
-        RCC->AHB1RSTR &= ~(1 << 6);                                            \
+#define GPIOG_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 6);  \
+        RCC->AHB1RSTR &= ~(1 << 6); \
     } while (0)
-#define GPIOH_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 7);                                             \
-        RCC->AHB1RSTR &= ~(1 << 7);                                            \
+#define GPIOH_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 7);  \
+        RCC->AHB1RSTR &= ~(1 << 7); \
     } while (0)
-#define GPIOI_REG_RESET()                                                      \
-    do {                                                                       \
-        RCC->AHB1RSTR |= (1 << 8);                                             \
-        RCC->AHB1RSTR &= ~(1 << 8);                                            \
+#define GPIOI_REG_RESET()           \
+    do {                            \
+        RCC->AHB1RSTR |= (1 << 8);  \
+        RCC->AHB1RSTR &= ~(1 << 8); \
     } while (0)
-#define GPIOALL_REG_RESET()                                                    \
-    do {                                                                       \
-        RCC->AHB1RSTR |= 0x000000FF;                                           \
-        RCC->AHB1STR &= 0xFFFFFF00                                             \
+#define GPIOALL_REG_RESET()          \
+    do {                             \
+        RCC->AHB1RSTR |= 0x000000FF; \
+        RCC->AHB1STR &= 0xFFFFFF00   \
     } while (0)
 
 //** GPIO object end **//
@@ -209,28 +209,28 @@
 #define SPI3_PCLK_DI() (RCC->APB1ENR &= ~(1 << 15))
 #define SPI4_PCLK_DI() (RCC->APB2ENR &= ~(1 << 13))
 
-#define SPI1_REG_RESET()                                                       \
-    do {                                                                       \
-        RCC->APB2RSTR |= (1 << 12);                                            \
-        RCC->APB2RSTR &= ~(1 << 12);                                           \
+#define SPI1_REG_RESET()             \
+    do {                             \
+        RCC->APB2RSTR |= (1 << 12);  \
+        RCC->APB2RSTR &= ~(1 << 12); \
     } while (0)
 
-#define SPI2_REG_RESET()                                                       \
-    do {                                                                       \
-        RCC->APB1RSTR |= (1 << 14);                                            \
-        RCC->APB1RSTR &= ~(1 << 14);                                           \
+#define SPI2_REG_RESET()             \
+    do {                             \
+        RCC->APB1RSTR |= (1 << 14);  \
+        RCC->APB1RSTR &= ~(1 << 14); \
     } while (0)
 
-#define SPI3_REG_RESET()                                                       \
-    do {                                                                       \
-        RCC->APB1RSTR |= (1 << 15);                                            \
-        RCC->APB1RSTR &= ~(1 << 15);                                           \
+#define SPI3_REG_RESET()             \
+    do {                             \
+        RCC->APB1RSTR |= (1 << 15);  \
+        RCC->APB1RSTR &= ~(1 << 15); \
     } while (0)
 
-#define SPI4_REG_RESET()                                                       \
-    do {                                                                       \
-        RCC->APB2RSTR |= (1 << 13);                                            \
-        RCC->APB2RSTR &= ~(1 << 13);                                           \
+#define SPI4_REG_RESET()             \
+    do {                             \
+        RCC->APB2RSTR |= (1 << 13);  \
+        RCC->APB2RSTR &= ~(1 << 13); \
     } while (0)
 
 // Clock enable/disable macros for USARTx peripherals
@@ -312,6 +312,7 @@ void IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 
 #include "GPIO_driver.h"
+#include "I2C_driver.h"
 #include "SPI_driver.h"
 
 #endif /* INC_STM32F429_H_ */

@@ -5,7 +5,6 @@
  *      Author: jiajun
  */
 
-
 #ifndef INC_GPIO_DRIVER_H_
 #define INC_GPIO_DRIVER_H_
 
@@ -57,7 +56,6 @@
 #define GPIO_PIN_PU 1  // pull-up
 #define GPIO_PIN_PD 2  // pull-down
 
-
 // GPIO interrupt vector table function address
 #define EXTI0_HANDLER_ADDR 0x00000058
 #define EXTI1_HANDLER_ADDR 0x0000005C
@@ -77,8 +75,8 @@ typedef struct {
 } GPIO_PinConfig_t;
 
 typedef struct {
-    GPIO_RegDef_t *pGPIOx; // pointer to hold the base address of the GPIO port
-                           // to which the pin belongs
+    GPIO_RegDef_t *pGPIOx;           // pointer to hold the base address of the GPIO port
+                                     // to which the pin belongs
     GPIO_PinConfig_t GPIO_PinConfig; // holds GPIO pin configuration settings
 
 } GPIO_Handle_t;
@@ -107,16 +105,12 @@ void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx,
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx,
                           uint8_t PinNumber); // toggle the output pin
 
-
-
 /**
  * @brief IRQ handling from the pin number
  *
  * @param PinNumber
  */
 void GPIO_IRQHandling(uint8_t PinNumber); // IRQ handling from the pin number
-
-
 
 void GPIO_RegisterIRQHandler(uint8_t PinNumber, uint32_t IRQPriority,
                              void (*function)(void));

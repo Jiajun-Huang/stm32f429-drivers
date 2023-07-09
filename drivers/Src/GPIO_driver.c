@@ -172,7 +172,6 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber) {
     pGPIOx->ODR ^= (1 << PinNumber);
 } // toggle the output pin
 
-
 void GPIO_IRQHandling(uint8_t PinNumber) {
     // clear the EXTI PR register corresponding to the pin number
     if (EXTI->PR & (1 << PinNumber)) {
@@ -180,7 +179,6 @@ void GPIO_IRQHandling(uint8_t PinNumber) {
         EXTI->PR |= (1 << PinNumber);
     }
 } // IRQ handling from the pin number
-
 
 void GPIO_RegisterIRQHandler(uint8_t PinNumber, uint32_t IRQPriority,
                              void (*function)(void)) {
