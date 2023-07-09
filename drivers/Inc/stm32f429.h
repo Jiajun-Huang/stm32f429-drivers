@@ -7,8 +7,9 @@
 
 #ifndef INC_STM32F429_H_
 #define INC_STM32F429_H_
-#include "type_def.h"
 #include <stdint.h>
+
+#include "type_def.h"
 
 //** CORE PERIPHERAL BASE ADDRESSES **//
 // ISER (Interrupt Set enable register) register addresses
