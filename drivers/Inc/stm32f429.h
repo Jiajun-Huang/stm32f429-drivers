@@ -270,6 +270,15 @@
 #define IRQ_NO_SPI5 85
 #define IRQ_NO_SPI6 86
 
+// IRQ (Intr) numbers for I2Cx peripherals
+#define IRQ_NO_I2C1_EV 31
+#define IRQ_NO_I2C1_ER 32
+#define IRQ_NO_I2C2_EV 33
+#define IRQ_NO_I2C2_ER 34
+#define IRQ_NO_I2C3_EV 72
+#define IRQ_NO_I2C3_ER 73
+
+
 // IRQ (Intr) priority levels
 #define NVIC_IRQ_PRI0 0
 #define NVIC_IRQ_PRI1 1

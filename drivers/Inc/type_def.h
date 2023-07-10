@@ -313,4 +313,98 @@ typedef struct {
     __vo I2C_FLTR_bits_t I2C_FLTR;    // I2C FLTR register
 } I2C_RegDef_t;
 
+//* USART *//
+typedef struct {
+    __vo uint32_t PE : 1;    // Parity error
+    __vo uint32_t FE : 1;    // Framing error
+    __vo uint32_t NF : 1;    // Noise detected flag
+    __vo uint32_t ORE : 1;   // Overrun error
+    __vo uint32_t IDLE : 1;  // IDLE line detected
+    __vo uint32_t RXNE : 1;  // Read data register not empty
+    __vo uint32_t TC : 1;    // Transmission complete
+    __vo uint32_t TXE : 1;   // Transmit data register empty
+    __vo uint32_t LBD : 1;   // LIN break detection flag
+    __vo uint32_t CTS : 1;   // CTS flag
+    __vo uint32_t RESERVED1 : 22;
+} USART_SR_bits_t;
+
+typedef struct
+{
+    __vo uint32_t DIV_Fracton : 4;    // Fraction of USARTDIV
+    __vo uint32_t DIV_Mantissa : 12;  // Mantissa of USARTDIV
+    __vo uint32_t RESERVED1 : 16;
+} USART_BRR_bits_t;
+
+typedef struct
+{
+    __vo uint32_t SBK : 1;     // Send break
+    __vo uint32_t RWU : 1;     // Receiver wakeup
+    __vo uint32_t RE : 1;      // Receiver enable
+    __vo uint32_t TE : 1;      // Transmitter enable
+    __vo uint32_t IDLEIE : 1;  // IDLE interrupt enable
+    __vo uint32_t RXNEIE : 1;  // RXNE interrupt enable
+    __vo uint32_t TCIE : 1;    // Transmission complete interrupt enable
+    __vo uint32_t TXEIE : 1;   // TXE interrupt enable
+    __vo uint32_t PEIE : 1;    // PE interrupt enable
+    __vo uint32_t PS : 1;      // Parity selection
+    __vo uint32_t PCE : 1;     // Parity control enable
+    __vo uint32_t WAKE : 1;    // Wakeup method
+    __vo uint32_t M : 1;       // Word length
+    __vo uint32_t UE : 1;      // USART enable
+    __vo uint32_t RESERVED1 : 1;
+    __vo uint32_t OVER8 : 1;  // Oversampling mode
+    __vo uint32_t RESERVED2 : 16;
+} USART_CR1_bits_t;
+
+typedef struct {
+    __vo uint32_t ADD : 4;  // Address of the USART node
+    __vo uint32_t RESERVED1 : 1;
+    __vo uint32_t LBDL : 1;   // LIN break detection length
+    __vo uint32_t LBDIE : 1;  // LIN break detection interrupt enable
+    __vo uint32_t RESERVED2 : 1;
+    __vo uint32_t LBCL : 1;   // Last bit clock pulse
+    __vo uint32_t CPHA : 1;   // Clock phase
+    __vo uint32_t CPOL : 1;   // Clock polarity
+    __vo uint32_t CLKEN : 1;  // Clock enable
+    __vo uint32_t STOP : 2;   // STOP bits
+    __vo uint32_t LINEN : 1;  // LIN mode enable
+    __vo uint32_t RESERVED3 : 17;
+} USART_CR2_bits_t;
+
+typedef struct {
+    __vo uint32_t EIE : 1;     // Error interrupt enable
+    __vo uint32_t IREN : 1;    // IrDA mode enable
+    __vo uint32_t IRLP : 1;    // IrDA low-power
+    __vo uint32_t HDSEL : 1;   // Half-duplex selection
+    __vo uint32_t NACK : 1;    // Smartcard NACK enable
+    __vo uint32_t SCEN : 1;    // Smartcard mode enable
+    __vo uint32_t DMAR : 1;    // DMA enable receiver
+    __vo uint32_t DMAT : 1;    // DMA enable transmitter
+    __vo uint32_t RTSE : 1;    // RTS enable
+    __vo uint32_t CTSE : 1;    // CTS enable
+    __vo uint32_t CTSIE : 1;   // CTS interrupt enable
+    __vo uint32_t ONEBIT : 1;  // One sample bit method enable
+    __vo uint32_t RESERVED1 : 20;
+} USART_CR3_bits_t;
+
+typedef struct {
+    __vo uint32_t PSC : 8;  // Prescaler value
+    __vo uint32_t GT : 8;   // Guard time value
+    __vo uint32_t RESERVED1 : 16;
+} USART_GTPR_bits_t;
+
+typedef struct {
+    __vo uint32_t DR : 8;  // Data value
+    __vo uint32_t RESERVED1 : 24;
+
+} USART_DR_bits_t;
+typedef struct {
+    __vo USART_SR_bits_t SR;      // USART Status register
+    __vo USART_DR_bits_t DR;      // USART Data register
+    __vo USART_BRR_bits_t BRR;    // USART Baud rate register
+    __vo USART_CR1_bits_t CR1;    // USART Control register 1
+    __vo USART_CR2_bits_t CR2;    // USART Control register 2
+    __vo USART_CR3_bits_t CR3;    // USART Control register 3
+    __vo USART_GTPR_bits_t GTPR;  // USART Guard time and prescaler register
+} USART_RegDef_t;
 #endif /* TYPE_DEF_H_ */

@@ -28,7 +28,6 @@ void I2C_Init(I2C_Handle_t *pI2CHandle) {
     pI2Cx->I2C_CR1.PE = ENABLE;
     pI2Cx->I2C_CR1.ACK = config.I2C_AckControl;
 
-
     // cr2 calculate freq
     // which syscalck is used
     uint32_t pclk = RCC->CFGR.SWS;
@@ -133,10 +132,86 @@ void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxBuffer, uint32_t L
     // generate stop condition
     pI2Cx->I2C_CR1.STOP = 1;
 }
-void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer,
-                           uint32_t Len, uint16_t SlaveAddr) {}
-void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data) {}
-uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx) {}
+
+uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxBuffer, uint32_t Len, uint16_t SlaveAddr) {
+    uint8_t busystate = pI2CHandle->TxRxState;
+
+    if ((busystate != I2C_BUSY_IN_TX) && (busystate != I2C_BUSY_IN_RX)) {
+        pI2CHandle->pTxBuffer = pTxBuffer;
+        pI2CHandle->TxLen = Len;
+        pI2CHandle->TxRxState = I2C_BUSY_IN_TX;
+        pI2CHandle->DevAddr = SlaveAddr;
+        pI2CHandle->Sr = Sr;
+
+        // Implement code to Generate START Condition
+        I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
+
+        // Implement the code to enable ITBUFEN Control Bit
+        pI2CHandle->pI2Cx->I2C_CR2.ITEVTEN = 1;
+
+        // Implement the code to enable ITEVFEN Control Bit
+        pI2CHandle->pI2Cx->I2C_CR2.ITBUFEN = 1;
+
+        // Implement the code to enable ITERREN Control Bit
+        pI2CHandle->pI2Cx->I2C_CR2.ITERREN = 1;
+    }
+
+    return busystate;
+}
+
+void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint32_t Len, uint16_t SlaveAddr) {
+    I2C_RegDef_t *pI2Cx = pI2CHandle->pI2Cx;
+
+    // generate start condition
+    pI2Cx->I2C_CR1.START = 1;
+    // confirm that start generation is completed by checking the SB flag in the SR1 until SB is cleared SCL will be stretched
+    while (!pI2Cx->I2C_SR1.SB)
+        ;
+
+    // send the address of the slave with r/nw bit set to r(1) (total 8 bits)
+    SlaveAddr = SlaveAddr << 1;
+    SlaveAddr |= 1;
+    pI2Cx->I2C_DR.DR = SlaveAddr;
+
+    // confirm that address phase is completed by checking the ADDR flag in the SR1
+    while (!pI2Cx->I2C_SR1.ADDR)
+        ;
+
+    if (Len == 1) {  // when only one byte is to be received then disable the ack and generate stop condition before clearing the ADDR flag
+        pI2Cx->I2C_CR1.ACK = RESET;
+        while (!pI2Cx->I2C_SR1.RxNE)
+            ;
+        pI2Cx->I2C_CR1.STOP = SET;
+        *pRxBuffer = pI2Cx->I2C_DR.DR;
+    }
+    // clear the ADDR by reading SR1 and SR2
+    I2C_SR1_bits_t dummyread1 = pI2Cx->I2C_SR1;
+    I2C_SR2_bits_t dummyread2 = pI2Cx->I2C_SR2;
+
+    // receive the data until Len becomes 0
+    while (Len > 1) {
+        while (!pI2Cx->I2C_SR1.RxNE)
+            ;
+        if (Len == 2) {
+            // clear the ack bit
+            pI2Cx->I2C_CR1.ACK = RESET;
+            // generate stop condition
+            pI2Cx->I2C_CR1.STOP = SET;
+        }
+        *pRxBuffer = pI2Cx->I2C_DR.DR;
+        pRxBuffer++;
+        Len--;
+    }
+
+    pI2Cx->I2C_CR1.ACK = pI2CHandle->I2C_Config.I2C_AckControl;  // restore ack bit
+}
+void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data) {
+    pI2Cx->I2C_DR.DR = data;
+};
+
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx) {
+    return (uint8_t)pI2Cx->I2C_DR.DR;
+}
 
 void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle) {}
 void I2C_ER_IRQHandling(I2C_Handle_t *pI2CHandle) {}
