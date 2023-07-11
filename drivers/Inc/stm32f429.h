@@ -101,12 +101,12 @@
 #define I2C2 ((I2C_RegDef_t *)I2C2_BASEADDR)
 #define I2C3 ((I2C_RegDef_t *)I2C3_BASEADDR)
 
-// #define USART1 ((USART_RegDef_t *)USART1_BASEADDR)
-// #define USART2 ((USART_RegDef_t *)USART2_BASEADDR)
-// #define USART3 ((USART_RegDef_t *)USART3_BASEADDR)
-// #define UART4 ((USART_RegDef_t *)UART4_BASEADDR)
-// #define UART5 ((USART_RegDef_t *)UART5_BASEADDR)
-// #define USART6 ((USART_RegDef_t *)USART6_BASEADDR)
+#define USART1 ((USART_RegDef_t *)USART1_BASEADDR)
+#define USART2 ((USART_RegDef_t *)USART2_BASEADDR)
+#define USART3 ((USART_RegDef_t *)USART3_BASEADDR)
+#define UART4 ((USART_RegDef_t *)UART4_BASEADDR)
+#define UART5 ((USART_RegDef_t *)UART5_BASEADDR)
+#define USART6 ((USART_RegDef_t *)USART6_BASEADDR)
 
 //** object definitions end **//
 
@@ -278,7 +278,6 @@
 #define IRQ_NO_I2C3_EV 72
 #define IRQ_NO_I2C3_ER 73
 
-
 // IRQ (Intr) priority levels
 #define NVIC_IRQ_PRI0 0
 #define NVIC_IRQ_PRI1 1
@@ -320,6 +319,9 @@ void IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
  * @param IRQPriority  IRQ priority
  */
 void IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
+
+uint32_t getPCLK2Value();
+uint32_t getPCLK1Value();
 
 #include "GPIO_driver.h"
 #include "I2C_driver.h"

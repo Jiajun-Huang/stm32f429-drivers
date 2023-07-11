@@ -394,8 +394,8 @@ typedef struct {
 } USART_GTPR_bits_t;
 
 typedef struct {
-    __vo uint32_t DR : 8;  // Data value
-    __vo uint32_t RESERVED1 : 24;
+    __vo uint32_t DR : 9;  // Data value
+    __vo uint32_t RESERVED1 : 23;
 
 } USART_DR_bits_t;
 typedef struct {
