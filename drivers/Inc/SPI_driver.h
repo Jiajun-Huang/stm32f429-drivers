@@ -14,13 +14,13 @@
  *  Configuration structure for SPIx peripheral
  */
 typedef struct {
-    uint8_t SPI_DeviceMode; // master or slave
-    uint8_t SPI_BusConfig;  // full duplex, half duplex, simplex
-    uint8_t SPI_SclkSpeed;  // clock speed
-    uint8_t SPI_DFF;        // data frame format
-    uint8_t SPI_CPOL;       // clock polarity
-    uint8_t SPI_CPHA;       // clock phase
-    uint8_t SPI_SSM;        // software slave management
+    uint8_t SPI_DeviceMode;  // master or slave
+    uint8_t SPI_BusConfig;   // full duplex, half duplex, simplex
+    uint8_t SPI_SclkSpeed;   // clock speed
+    uint8_t SPI_DFF;         // data frame format
+    uint8_t SPI_CPOL;        // clock polarity
+    uint8_t SPI_CPHA;        // clock phase
+    uint8_t SPI_SSM;         // software slave management
 } SPI_Config_t;
 
 /*
@@ -50,10 +50,10 @@ typedef void (*SPI_CallbackFunc)(SPI_Handle_t *, uint8_t);
 /*
  * Possible SPI Application events
  */
-#define SPI_EVENT_TX_CMPLT 1 // Transmission complete
-#define SPI_EVENT_RX_CMPLT 2 // Reception complete
-#define SPI_EVENT_OVR_ERR 3  // Overrun error
-#define SPI_EVENT_CRC_ERR 4  // CRC error
+#define SPI_EVENT_TX_CMPLT 1  // Transmission complete
+#define SPI_EVENT_RX_CMPLT 2  // Reception complete
+#define SPI_EVENT_OVR_ERR 3   // Overrun error
+#define SPI_EVENT_CRC_ERR 4   // CRC error
 
 /*
  * @SPI_DeviceMode

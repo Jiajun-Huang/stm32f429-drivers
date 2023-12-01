@@ -33,7 +33,8 @@ void SPI_senddata_test(void);
 
 int main(void) {
     //    GPIO_interrup_test();
-    SPI_senddata_test();
+    SPI_sendwhile (!pI2Cx->I2C_SR1.SB)
+                ;data_test();
     for (;;)
         ;
 }
@@ -104,7 +105,6 @@ void GPIO_interrup_test(void) {
     gpio.pGPIOx = GPIOG;
 
     GPIO_Init(&gpio);
-
     GPIO_WriteToOutputPin(GPIOG, GPIO_PIN_13, SET);
     // register interrupt handler
     // GPIO_RegisterIRQHandler(GPIO_PIN_0, 15, GPIO_intrrupt_handler);
