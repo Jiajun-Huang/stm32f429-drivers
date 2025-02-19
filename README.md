@@ -3,6 +3,6 @@ This repository contains peripheral drivers for the STM32F429 microcontroller. T
 
 Current status of the drivers:
 - [x] GPIO
-- [ ] SPI
-- [ ] I2C
-- [ ] USART & UART
+- [x] SPI
+- [x] I2C
+- [x] USART & UART
